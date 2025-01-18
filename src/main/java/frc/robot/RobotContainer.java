@@ -6,18 +6,23 @@ package frc.robot;
 
 import java.io.File;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Subsystems.SwerveSubsystem;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
+  public static SendableChooser<Command> autoChooser;
+
   public RobotContainer() {
-    
+
     configureBindings();
     
     Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
@@ -25,7 +30,12 @@ public class RobotContainer {
      () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
      () -> MathUtil.applyDeadband(driverXbox.getRightX(), OperatorConstants.RIGHT_X_DEADBAND));
 
-     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+
+    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    drivebase.getSubsystem();
+
+    
+    BuildAutoChooser();
   }
 
  final CommandXboxController driverXbox = new CommandXboxController(1);
@@ -33,7 +43,7 @@ public class RobotContainer {
 
  private final SwerveSubsystem drivebase = 
  new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
-
+ 
 
   private void configureBindings() {
 
@@ -42,8 +52,13 @@ public class RobotContainer {
   
   }
 
+
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    try{
+      return autoChooser.getSelected();
+    } catch(Exception e ) {
+      throw e;
+    }  
   }
 
   public void setMotorBrake(boolean brake)
@@ -51,4 +66,8 @@ public class RobotContainer {
     drivebase.setMotorBrake(brake);
   }
   
+  public static void BuildAutoChooser(){
+    autoChooser = AutoBuilder.buildAutoChooser ("Leave Auto");
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+  }
 }
