@@ -7,6 +7,7 @@ package frc.robot;
 import java.io.File;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -34,7 +35,6 @@ public class RobotContainer {
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
     drivebase.getSubsystem();
 
-    
     BuildAutoChooser();
   }
 
@@ -54,6 +54,7 @@ public class RobotContainer {
 
 
   public Command getAutonomousCommand() {
+    
     try{
       return autoChooser.getSelected();
     } catch(Exception e ) {
@@ -67,7 +68,7 @@ public class RobotContainer {
   }
   
   public static void BuildAutoChooser(){
-    autoChooser = AutoBuilder.buildAutoChooser ("Leave Auto");
+    autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 }

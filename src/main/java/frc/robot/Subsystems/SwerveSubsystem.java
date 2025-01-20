@@ -27,19 +27,23 @@ public class SwerveSubsystem extends SubsystemBase {
 
   private final SwerveDrive swerveDrive;
   public RobotConfig config;
-  /**
-   * Initialize SwerveDrive with configuration files from the provided directory.
-   *
-   * @param directory Directory containing swerve drive config files.
-   */
+  
+
   public SwerveSubsystem(File directory) {
     try {
       swerveDrive = new SwerveParser(directory).createSwerveDrive(Constants.MAX_SPEED);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-    setupPathPlanner();
-  } 
+
+      try{
+        config = RobotConfig.fromGUISettings();
+      } catch (Exception e){
+        e.printStackTrace();
+      }
+      setupPathPlanner();   
+  }
+      
 
   /**
    * Drive the robot with specified translation and rotation.
@@ -152,10 +156,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void setupPathPlanner()
   {
-    try{
-      config = RobotConfig.fromGUISettings();
-
-      AutoBuilder.configure(
+    AutoBuilder.configure(
         this::getPose,
         this::resetOdometry, 
         this::getRobotRelativeSpeeds,
@@ -166,10 +167,6 @@ public class SwerveSubsystem extends SubsystemBase {
         ),
         config,
         () -> {
-          // Boolean supplier that controls when the path will be mirrored for the red alliance
-          // This will flip the path being followed to the red side of the field.
-          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
           var alliance = DriverStation.getAlliance();
           if (alliance.isPresent()) {
             return alliance.get() == DriverStation.Alliance.Red;
@@ -178,10 +175,8 @@ public class SwerveSubsystem extends SubsystemBase {
         },
         this // Reference to this subsystem to set requirements
       );
-    }catch(Exception e){
-      DriverStation.reportError("AHH+HHHHHH", e.getStackTrace());
-    }
-  }
+  } 
+  
 
 
   public void lock()
