@@ -10,6 +10,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,7 +24,7 @@ public class RobotContainer {
   public static SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
-
+    DriverStation.silenceJoystickConnectionWarning(true);
     configureBindings();
     
     Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
@@ -54,12 +55,13 @@ public class RobotContainer {
 
 
   public Command getAutonomousCommand() {
-    
-    try{
-      return autoChooser.getSelected();
-    } catch(Exception e ) {
-      throw e;
-    }  
+    return drivebase.getAutonomousCommand("8 Auto");
+
+    //try{
+      //return autoChooser.getSelected();
+    //} catch(Exception e ) {
+      //throw e;
+    //}  
   }
 
   public void setMotorBrake(boolean brake)

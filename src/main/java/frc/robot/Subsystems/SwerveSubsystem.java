@@ -19,6 +19,7 @@ import java.util.Locale.Category;
 import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -187,5 +188,10 @@ public class SwerveSubsystem extends SubsystemBase {
   public ChassisSpeeds getRobotRelativeSpeeds()
   {
     return swerveDrive.getRobotVelocity();
+  }
+
+
+  public Command getAutonomousCommand(String pathName) {
+    return new PathPlannerAuto(pathName);
   }
 }
