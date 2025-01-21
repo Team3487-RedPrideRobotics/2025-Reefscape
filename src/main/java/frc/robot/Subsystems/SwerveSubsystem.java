@@ -4,34 +4,47 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
 
 import java.io.File;
+import java.util.Locale.Category;
 import java.util.function.DoubleSupplier;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 public class SwerveSubsystem extends SubsystemBase {
 
   private final SwerveDrive swerveDrive;
+  public RobotConfig config;
+  
 
-  /**
-   * Initialize SwerveDrive with configuration files from the provided directory.
-   *
-   * @param directory Directory containing swerve drive config files.
-   */
   public SwerveSubsystem(File directory) {
-
     try {
       swerveDrive = new SwerveParser(directory).createSwerveDrive(Constants.MAX_SPEED);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+
+      try{
+        config = RobotConfig.fromGUISettings();
+      } catch (Exception e){
+        e.printStackTrace();
+      }
+      setupPathPlanner();   
   }
+      
 
   /**
    * Drive the robot with specified translation and rotation.
@@ -51,6 +64,11 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   public void driveFieldOriented(ChassisSpeeds velocity) {
     swerveDrive.driveFieldOriented(velocity);
+  }
+
+  public void driveRobotRelative(ChassisSpeeds e)
+  {
+    swerveDrive.drive(e);
   }
 
   /**
@@ -137,8 +155,43 @@ public class SwerveSubsystem extends SubsystemBase {
     return swerveDrive.swerveDriveConfiguration;
   }
 
+  public void setupPathPlanner()
+  {
+    AutoBuilder.configure(
+        this::getPose,
+        this::resetOdometry, 
+        this::getRobotRelativeSpeeds,
+        (speeds, feedforwards) -> driveRobotRelative(speeds),
+        new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
+                    Constants.AutonConstants.TRANSLATION_PID, // Translation PID constants
+                    Constants.AutonConstants.ANGLE_PID // Rotation PID constants
+        ),
+        config,
+        () -> {
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+          }
+          return false;
+        },
+        this // Reference to this subsystem to set requirements
+      );
+  } 
+  
+
+
   public void lock()
   {
     swerveDrive.lockPose();
+  }
+
+  public ChassisSpeeds getRobotRelativeSpeeds()
+  {
+    return swerveDrive.getRobotVelocity();
+  }
+
+
+  public Command getAutonomousCommand(String pathName) {
+    return new PathPlannerAuto(pathName);
   }
 }

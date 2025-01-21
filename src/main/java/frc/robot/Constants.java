@@ -2,12 +2,22 @@ package frc.robot;
 
 
 import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
 
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
 
 public final class Constants {
+
+    RobotConfig config;{
+    try{
+      config = RobotConfig.fromGUISettings();
+    } catch (Exception e) {
+      // Handle exception as needed
+      e.printStackTrace();
+    }
+}
     
     public static final double ROBOT_MASS = (50) * 0.453592; // 50lbs (50 lbs exactly ikr what a thing) * kg per pound
     public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
@@ -28,8 +38,9 @@ public final class Constants {
     public static final class AutonConstants
     {
 
-        public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
-        public static final PIDConstants ANGLE_PID       = new PIDConstants(0.4, 0, 0.01);
+        public static final PIDConstants TRANSLATION_PID = new PIDConstants(5, 0, 0);
+        public static final PIDConstants ANGLE_PID       = new PIDConstants(5, 0, 0.01);
+        public static final double AUTO_MAX_SPEED = 2.57; //  meters per second
     }
 
     

@@ -26,16 +26,22 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {
+  public void disabledInit() 
+  {
+    m_robotContainer.setMotorBrake(true);
+    disabledTimer.reset();
+    disabledTimer.start();
+  }
+
+  @Override
+  public void disabledPeriodic() 
+  {
     if (disabledTimer.hasElapsed(Constants.DrivebaseConstants.WHEEL_LOCK_TIME))
     {
       m_robotContainer.setMotorBrake(false);
       disabledTimer.stop();
     }
   }
-
-  @Override
-  public void disabledPeriodic() {}
 
   @Override
   public void disabledExit() {}
@@ -48,6 +54,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.schedule();
     }
   }
+
 
   @Override
   public void autonomousPeriodic() {}
