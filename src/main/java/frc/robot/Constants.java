@@ -50,6 +50,14 @@ public final class Constants {
       // Hold time on motor brakes when disabled
       public static final double WHEEL_LOCK_TIME = 5; // seconds
     }
+
+    public static final class VisionConstants
+    {
+      public static final double limelightLensHeightInches = 4.5; //update when robot work :D
+      public static final double limelightMountAngleDegrees = 90; //update plz :|
+      public static final double heightOfGoal = 12.125;              //update will happen one day :(
+    }
     
+
     
 }

@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Subsystems.SwerveSubsystem;
+import frc.robot.Subsystems.Vision;
 
 public class RobotContainer {
   public static SendableChooser<Command> autoChooser;
@@ -44,13 +45,11 @@ public class RobotContainer {
 
  private final SwerveSubsystem drivebase = 
  new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
- 
+ private final Vision vision = new Vision();
 
   private void configureBindings() {
-
     driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
     driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-  
   }
 
 
