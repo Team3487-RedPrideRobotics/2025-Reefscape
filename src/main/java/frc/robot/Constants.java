@@ -55,7 +55,7 @@ public final class Constants {
     {
       public static final double limelightLensHeightInches = 4.5; //update when robot work :D
       public static final double limelightMountAngleDegrees = 90; //update plz :|
-      public static final double heightOfGoal = 12.125;              //update will happen one day :(
+      public static final double heightOfGoal = 14;              //update will happen one day :(
     }
     
 

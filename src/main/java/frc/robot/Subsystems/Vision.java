@@ -18,7 +18,7 @@ public class Vision extends SubsystemBase{
     NetworkTableEntry tid;
 
     public Vision(){
-        table = NetworkTableInstance.getDefault().getTable("Limelight");
+        table = NetworkTableInstance.getDefault().getTable("limelight-bambino");
 
         tx = table.getEntry("tx");
         ty = table.getEntry("ty");
@@ -54,9 +54,8 @@ public class Vision extends SubsystemBase{
         return distance;
       }
     
-
-    public void Periodic(){
-        System.out.println("Hi");
+    @Override
+    public void periodic(){
 
         SmartDashboard.putNumber("XPos", getXPos());
         SmartDashboard.putNumber("YPos", getYPos());
