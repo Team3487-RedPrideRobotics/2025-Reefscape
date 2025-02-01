@@ -50,6 +50,16 @@ public final class Constants {
       // Hold time on motor brakes when disabled
       public static final double WHEEL_LOCK_TIME = 5; // seconds
     }
+
+    public static final class FloorIntakeSubsystem
+    {
+      public static final int FLOOR_INTAKE_MOTOR_ID = 99;
+      public static final int FLOOR_PIVOT_MOTOR_ID = 99;
+      public void stopFloorPivot() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'stopFloorPivot'");
+      }
+    }
     
     
 }
