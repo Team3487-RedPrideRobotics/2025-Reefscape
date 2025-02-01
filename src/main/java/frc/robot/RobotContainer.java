@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Subsystems.SwerveSubsystem;
+import frc.robot.Subsystems.Pivot.ArmSubsystem;
 
 public class RobotContainer {
   public static SendableChooser<Command> autoChooser;
@@ -42,26 +43,18 @@ public class RobotContainer {
  final CommandXboxController driverXbox = new CommandXboxController(1);
  final CommandXboxController operatorXbox = new CommandXboxController(0);
 
- private final SwerveSubsystem drivebase = 
- new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
+ private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
+ private final ArmSubsystem pivot = new ArmSubsystem();
  
 
   private void configureBindings() {
-
     driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
     driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-  
   }
 
 
   public Command getAutonomousCommand() {
     return drivebase.getAutonomousCommand("8 Auto");
-
-    //try{
-      //return autoChooser.getSelected();
-    //} catch(Exception e ) {
-      //throw e;
-    //}  
   }
 
   public void setMotorBrake(boolean brake)
