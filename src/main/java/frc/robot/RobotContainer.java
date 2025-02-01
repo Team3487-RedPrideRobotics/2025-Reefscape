@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Subsystems.SwerveSubsystem;
+import frc.robot.Subsystems.Pivot.ArmSubsystem;
 import frc.robot.Subsystems.FloorIntake.FloorIntakeSubsystem;
 import frc.robot.Subsystems.FloorIntake.States.IntakeState;
 import frc.robot.Subsystems.FloorIntake.States.OuttakeState;
@@ -53,18 +54,14 @@ public class RobotContainer {
  final CommandXboxController driverXbox = new CommandXboxController(1);
  final CommandXboxController operatorXbox = new CommandXboxController(0);
 
- private final SwerveSubsystem drivebase = 
- new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
+ private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
+ private final ArmSubsystem pivot = new ArmSubsystem();
  private final FloorIntakeSubsystem floorIntake = new FloorIntakeSubsystem();
 
 
   private void configureBindings() {
-
     driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
     driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-  
-
-    
   }
 
   public void configureOperatorBindings()
@@ -90,12 +87,6 @@ public class RobotContainer {
   }
   public Command getAutonomousCommand() {
     return drivebase.getAutonomousCommand("8 Auto");
-
-    //try{
-      //return autoChooser.getSelected();
-    //} catch(Exception e ) {
-      //throw e;
-    //}  
   }
 
   public void setMotorBrake(boolean brake)
