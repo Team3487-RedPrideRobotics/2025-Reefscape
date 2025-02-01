@@ -50,11 +50,21 @@ public final class Constants {
       // Hold time on motor brakes when disabled
       public static final double WHEEL_LOCK_TIME = 5; // seconds
     }
-
+  
     public static final class ElevatorConstants
     {
       public static final int LEFT_MOTOR_ID  = 99;
       public static final int RIGHT_MOTOR_ID = 99;
+
+    public static final class ArmConstants
+    {
+      public static final int ARM_MOTOR_ID = 99;
+
+    public static final class FloorConstants
+    {
+      public static final int FLOOR_INTAKE_MOTOR_ID = 99;
+      public static final int FLOOR_PIVOT_MOTOR_ID = 99;
+
     }
     
     
