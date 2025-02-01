@@ -50,6 +50,11 @@ public final class Constants {
       // Hold time on motor brakes when disabled
       public static final double WHEEL_LOCK_TIME = 5; // seconds
     }
+
+    public static final class ArmConstants
+    {
+      public static final int ARM_MOTOR_ID = 99;
+    }
     
     
 }
