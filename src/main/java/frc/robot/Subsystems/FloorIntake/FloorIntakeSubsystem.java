@@ -12,8 +12,8 @@ public class FloorIntakeSubsystem {
 
     public FloorIntakeSubsystem()
     {
-        floorIntakeMotor = new SparkMax(Constants.FloorIntakeSubsystem.FLOOR_INTAKE_MOTOR_ID, MotorType.kBrushless);
-        floorPivotMotor  = new SparkMax(Constants.FloorIntakeSubsystem.FLOOR_PIVOT_MOTOR_ID, MotorType.kBrushless);
+        floorIntakeMotor = new SparkMax(Constants.FloorConstants.FLOOR_INTAKE_MOTOR_ID, MotorType.kBrushless);
+        floorPivotMotor  = new SparkMax(Constants.FloorConstants.FLOOR_PIVOT_MOTOR_ID, MotorType.kBrushless);
 
         pivotEncoder = floorPivotMotor.getEncoder();
     }

@@ -55,11 +55,11 @@ public final class Constants {
     {
       public static final int LEFT_MOTOR_ID  = 99;
       public static final int RIGHT_MOTOR_ID = 99;
-
+    }
     public static final class ArmConstants
     {
       public static final int ARM_MOTOR_ID = 99;
-
+    }
     public static final class FloorConstants
     {
       public static final int FLOOR_INTAKE_MOTOR_ID = 99;

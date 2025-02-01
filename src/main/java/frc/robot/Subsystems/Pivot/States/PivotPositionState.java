@@ -30,8 +30,6 @@ public class PivotPositionState extends Command{
             goal = 3;
         }else if(position == "Algae"){
             goal = 4;
-        }else if(position == "Intake"){
-            goal = 5;
         }else{
             System.err.println("You Gyatt to get more Rizz");
         }
