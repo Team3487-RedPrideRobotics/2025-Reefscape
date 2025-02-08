@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,6 +16,9 @@ public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
   private Timer disabledTimer;
+
+  private AddressableLED m_led;
+  private AddressableLEDBuffer m_ledBuffer;
 
   public Robot() {
     m_robotContainer = new RobotContainer();
@@ -53,6 +58,14 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+    // Start Intitializing LEDs
+     m_led = new AddressableLED(9);
+     m_ledBuffer = new AddressableLEDBuffer(60);
+     m_led.setLength(m_ledBuffer.getLength());
+     m_led.setData(m_ledBuffer);
+     m_led.start();
+     // End Initializing LEDs
+
   }
 
 
