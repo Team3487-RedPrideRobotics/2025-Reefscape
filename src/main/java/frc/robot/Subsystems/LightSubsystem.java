@@ -31,9 +31,9 @@ public class LightSubsystem extends SubsystemBase {
    
 
   // Below is the Rainbow Pattern 
-      private final LEDPattern m_rainbow = LEDPattern.rainbow(255, 128);
-      private static final Distance kLedSpacing = Meters.of(1 / 120.0);
-      private final LEDPattern m_scrollingRainbow = m_rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(1), kLedSpacing);
+  public final LEDPattern m_rainbow = LEDPattern.rainbow(255, 128);
+  public static final Distance kLedSpacing = Meters.of(1 / 120.0);
+  public final LEDPattern m_scrollingRainbow = m_rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(1), kLedSpacing);
   // End Rainbow Pattern
 
 
@@ -84,5 +84,10 @@ public class LightSubsystem extends SubsystemBase {
     {
       blue.applyTo(m_buffer);
       m_led.setData(m_buffer);
+    }
+
+    public AddressableLEDBuffer getBuffer()
+    {
+      return m_buffer;
     }
   }

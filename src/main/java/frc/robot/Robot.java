@@ -6,16 +6,20 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Subsystems.LightSubsystem;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
   private Timer disabledTimer;
+
+  private LightSubsystem m_lightSubsystem;
 
   private AddressableLED m_led;
   private AddressableLEDBuffer m_ledBuffer;
@@ -34,6 +38,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() 
   {
     m_robotContainer.setMotorBrake(true);
+    m_robotContainer.runPattern(m_lightSubsystem.m_rainbow);
     disabledTimer.reset();
     disabledTimer.start();
   }
@@ -58,6 +63,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    
     // Start Intitializing LEDs
      m_led = new AddressableLED(9);
      m_ledBuffer = new AddressableLEDBuffer(60);
@@ -65,7 +72,6 @@ public class Robot extends TimedRobot {
      m_led.setData(m_ledBuffer);
      m_led.start();
      // End Initializing LEDs
-
   }
 
 
