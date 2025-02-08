@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Subsystems.ElevatorSubsystem;
 import frc.robot.Subsystems.SwerveSubsystem;
 
 public class RobotContainer {
@@ -44,7 +45,7 @@ public class RobotContainer {
 
  private final SwerveSubsystem drivebase = 
  new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
- 
+ private final ElevatorSubsystem elevator = new ElevatorSubsystem();
 
   private void configureBindings() {
 
