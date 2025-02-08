@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -86,6 +87,15 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    var alliance = DriverStation.getAlliance();
+      if(alliance.isPresent()) {
+        if (alliance.get() == DriverStation.Alliance.Red) {
+          m_robotContainer.runPattern(m_lightSubsystem.red);
+        } else {
+          m_robotContainer.runPattern(m_lightSubsystem.blue);
+        }
+      }
   }
 
   @Override

@@ -25,7 +25,7 @@ public class LightSubsystem extends SubsystemBase {
 
   
     private static final int kPort = 9;
-    private static final int kLength = 120;
+    private static final int kLength = 147;
     private AddressableLED m_led;
     private AddressableLEDBuffer m_buffer;
    
@@ -38,12 +38,12 @@ public class LightSubsystem extends SubsystemBase {
 
 
   // Start Red Pattern 
-     private LEDPattern red = LEDPattern.solid(Color.kRed);
+     public LEDPattern red = LEDPattern.solid(Color.kRed);
   // End Red Pattern 
 
 
   // Start Blue Pattern
-      private LEDPattern blue = LEDPattern.solid(Color.kBlue);
+      public LEDPattern blue = LEDPattern.solid(Color.kBlue);
   // End Blue Pattern
 
 
