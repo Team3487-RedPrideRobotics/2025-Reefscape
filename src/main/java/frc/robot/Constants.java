@@ -19,7 +19,7 @@ public final class Constants {
     }
 }
     
-    public static final double ROBOT_MASS = (50) * 0.453592; // 50lbs (50 lbs exactly ikr what a thing) * kg per pound
+    public static final double ROBOT_MASS = (104) * 0.453592; // kg per pound
     public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
     public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms spark max velocity lag
     public static final double MAX_SPEED  = Units.feetToMeters(3);
@@ -53,17 +53,17 @@ public final class Constants {
   
     public static final class ElevatorConstants
     {
-      public static final int LEFT_MOTOR_ID  = 99;
-      public static final int RIGHT_MOTOR_ID = 99;
+      public static final int LEFT_MOTOR_ID  = 12;
+      public static final int RIGHT_MOTOR_ID = 13;
     }
     public static final class ArmConstants
     {
-      public static final int ARM_MOTOR_ID = 99;
+      public static final int ARM_MOTOR_ID = 9;
     }
     public static final class FloorConstants
     {
-      public static final int FLOOR_INTAKE_MOTOR_ID = 99;
-      public static final int FLOOR_PIVOT_MOTOR_ID = 99;
+      public static final int FLOOR_INTAKE_MOTOR_ID = 11;
+      public static final int FLOOR_PIVOT_MOTOR_ID = 10;
 
     }
     
