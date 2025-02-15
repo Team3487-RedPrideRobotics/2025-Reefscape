@@ -27,7 +27,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Subsystems.SwerveSubsystem;
 import frc.robot.Subsystems.Elevator.ElevatorSubsystem;
 import frc.robot.Subsystems.Elevator.States.ElevatorPositionState;
 import frc.robot.Subsystems.Pivot.ArmSubsystem;
@@ -43,31 +42,18 @@ public class RobotContainer {
   public RobotContainer() {
     DriverStation.silenceJoystickConnectionWarning(true);
     configureBindings();
-    
-    Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
-     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-     () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-     () -> MathUtil.applyDeadband(driverXbox.getRightX(), OperatorConstants.RIGHT_X_DEADBAND));
-
-
-    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-    drivebase.getSubsystem();
-
-    BuildAutoChooser();
   }
 
  final CommandXboxController driverXbox = new CommandXboxController(1);
  final CommandXboxController operatorXbox = new CommandXboxController(0);
 
- private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
  private final ArmSubsystem pivot = new ArmSubsystem();
  private final FloorIntakeSubsystem floorIntake = new FloorIntakeSubsystem();
  private final ElevatorSubsystem elevator = new ElevatorSubsystem();
 
 
   private void configureBindings() {
-    driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-    driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+
   }
 
   public void configureOperatorBindings()
@@ -135,17 +121,5 @@ public class RobotContainer {
     leftTrigger.whileFalse(new PivotPositionState(pivot, "Intake"));
 
   }
-  public Command getAutonomousCommand() {
-    return drivebase.getAutonomousCommand("8 Auto");
-  }
-
-  public void setMotorBrake(boolean brake)
-  {
-    drivebase.setMotorBrake(brake);
-  }
   
-  public static void BuildAutoChooser(){
-    autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", autoChooser);
-  }
 }

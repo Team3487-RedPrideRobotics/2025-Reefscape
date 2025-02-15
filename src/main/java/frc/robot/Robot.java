@@ -16,10 +16,12 @@ public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
   private Timer disabledTimer;
+  private AnalogInput encoder;
 
   public Robot() {
     m_robotContainer = new RobotContainer();
     disabledTimer =new Timer();
+    encoder = new AnalogInput(0);
   }
 
   @Override
@@ -30,7 +32,6 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() 
   {
-    m_robotContainer.setMotorBrake(true);
     disabledTimer.reset();
     disabledTimer.start();
   }
@@ -40,7 +41,6 @@ public class Robot extends TimedRobot {
   {
     if (disabledTimer.hasElapsed(Constants.DrivebaseConstants.WHEEL_LOCK_TIME))
     {
-      m_robotContainer.setMotorBrake(false);
       disabledTimer.stop();
     }
   }
@@ -50,8 +50,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
@@ -74,6 +72,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() 
   {
+    System.out.println(encoder.getVoltage());
   }
 
   @Override
