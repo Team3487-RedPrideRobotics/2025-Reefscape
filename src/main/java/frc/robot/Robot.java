@@ -16,12 +16,15 @@ public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
   private Timer disabledTimer;
-  private AnalogInput encoder;
+  private AnalogInput encoder1, encoder2, encoder3, encoder4;
 
   public Robot() {
     m_robotContainer = new RobotContainer();
     disabledTimer =new Timer();
-    encoder = new AnalogInput(0);
+    encoder1 = new AnalogInput(0);
+    encoder2 = new AnalogInput(1);
+    encoder3 = new AnalogInput(2);
+    encoder4 = new AnalogInput(3);
   }
 
   @Override
@@ -72,7 +75,11 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() 
   {
-    System.out.println(encoder.getVoltage());
+    System.out.println("0: " + encoder1.getValue());
+    System.out.println("1: " + encoder2.getValue());
+    System.out.println("2: " + encoder3.getValue());
+    System.out.println("3: " + encoder4.getValue());
+
   }
 
   @Override
