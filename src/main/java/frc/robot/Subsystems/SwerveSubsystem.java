@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -29,6 +30,7 @@ import com.revrobotics.AbsoluteEncoder;
 public class SwerveSubsystem extends SubsystemBase {
 
   private final SwerveDrive swerveDrive;
+  File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
   public RobotConfig config;
   
 
@@ -45,6 +47,11 @@ public class SwerveSubsystem extends SubsystemBase {
         e.printStackTrace();
       }
       setupPathPlanner();   
+
+      swerveDrive.setHeadingCorrection(false);
+      swerveDrive.setCosineCompensator(false);
+      swerveDrive.setAngularVelocityCompensation(true, true, 0.1);
+      swerveDrive.setModuleEncoderAutoSynchronize(false, 1);
   }
       
 
@@ -117,13 +124,23 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier rotation) {
     return run(() -> {
-      Translation2d translation = new Translation2d(
+      swerveDrive.drive(new Translation2d(
         translationX.getAsDouble() * swerveDrive.getMaximumChassisVelocity(),
-        translationY.getAsDouble() * swerveDrive.getMaximumChassisVelocity()
+        translationY.getAsDouble() * swerveDrive.getMaximumChassisVelocity()),
+        rotation.getAsDouble() * swerveDrive.getMaximumChassisAngularVelocity(),
+        true,
+        false
       );
-      double rot = rotation.getAsDouble() * Math.PI;
-      driveFieldOriented(new ChassisSpeeds(translation.getX(), translation.getY(), rot));
     });
+
+    //return run(() -> {
+      //Translation2d translation = new Translation2d(
+        //translationX.getAsDouble() * swerveDrive.getMaximumChassisVelocity(),
+        //translationY.getAsDouble() * swerveDrive.getMaximumChassisVelocity()
+      //);
+      //double rot = rotation.getAsDouble() * Math.PI;
+      //driveFieldOriented(new ChassisSpeeds(translation.getX(), translation.getY(), rot));
+    //});
   }
 
   @Override

@@ -28,9 +28,9 @@ public final class Constants {
     {
 
         // Joystick Deadband
-        public static final double LEFT_X_DEADBAND  = 0.1;
-        public static final double LEFT_Y_DEADBAND  = 0.1;
-        public static final double RIGHT_X_DEADBAND = 0.1;
+        public static final double LEFT_X_DEADBAND  = 0.5;
+        public static final double LEFT_Y_DEADBAND  = 0.5;
+        public static final double RIGHT_X_DEADBAND = 0.5;
         public static final double TURN_CONSTANT    = 6;
     }
 
@@ -53,17 +53,17 @@ public final class Constants {
   
     public static final class ElevatorConstants
     {
-      public static final int LEFT_MOTOR_ID  = 12;
-      public static final int RIGHT_MOTOR_ID = 13;
+      public static final int LEFT_MOTOR_ID  = 43;
+      public static final int RIGHT_MOTOR_ID = 44;
     }
     public static final class ArmConstants
     {
-      public static final int ARM_MOTOR_ID = 9;
+      public static final int ARM_MOTOR_ID = 40;
     }
     public static final class FloorConstants
     {
-      public static final int FLOOR_INTAKE_MOTOR_ID = 11;
-      public static final int FLOOR_PIVOT_MOTOR_ID = 10;
+      public static final int FLOOR_INTAKE_MOTOR_ID = 41;
+      public static final int FLOOR_PIVOT_MOTOR_ID = 42;
 
     }
     
