@@ -1,5 +1,5 @@
 {
-    "absoluteEncoderOffset": -70,
+    "absoluteEncoderOffset": 12.6,
     "drive": {
       "type": "sparkmax_neo",
       "id": 11,
