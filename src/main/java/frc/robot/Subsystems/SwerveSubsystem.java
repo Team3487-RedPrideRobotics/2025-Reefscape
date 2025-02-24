@@ -16,6 +16,7 @@ import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
+import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 import java.io.File;
 import java.util.Locale.Category;
@@ -40,6 +41,7 @@ public class SwerveSubsystem extends SubsystemBase {
   
   public SwerveSubsystem(File directory) {
     try {
+      SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH; //schmitt added this line because mentors said so
       swerveDrive = new SwerveParser(directory).createSwerveDrive(Constants.MAX_SPEED);
     } catch (Exception e) {
       throw new RuntimeException(e);
