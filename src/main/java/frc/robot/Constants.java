@@ -6,7 +6,6 @@ import com.pathplanner.lib.config.RobotConfig;
 
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
-import swervelib.math.Matter;
 
 public final class Constants {
 
@@ -20,7 +19,6 @@ public final class Constants {
 }
     
     public static final double ROBOT_MASS = (104) * 0.453592; // kg per pound
-    public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
     public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms spark max velocity lag
     public static final double MAX_SPEED  = Units.feetToMeters(3);
    
@@ -67,5 +65,17 @@ public final class Constants {
 
     }
     
+    public static final class ModuleConstants
+    {
+      public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
+      public static final double kDriveMotorGearRatio = 1 / 6.12;
+      public static final double kTurningMotorGearRatio = 1 / 21.4285714;
+      public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
+      public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
+      public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
+      public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
+      public static final double kPTurning = 0.6;    
+    }
     
+
 }
