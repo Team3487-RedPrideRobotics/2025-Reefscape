@@ -2,7 +2,7 @@
     "imu": {
       "type": "navx",
       "id": 0,
-      "canbus": "rio"
+      "canbus": "" 
     },
     "invertedIMU": true,
     "modules": [
