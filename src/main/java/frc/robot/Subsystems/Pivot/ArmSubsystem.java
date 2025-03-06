@@ -31,25 +31,7 @@ public class ArmSubsystem extends SubsystemBase{
     public double getValue()
     {
         return armEncoder.getPosition();
-    }
+    }    
 
-    public boolean goToAngle(double arm, double limit, double armkP, double threshold){
-        double armDelta = Math.abs(arm) - Math.abs(getValue());
-        System.out.println("arm difference: " + armDelta);
-        System.out.println("arm position: " + getValue());
-
-        if(Math.abs(armDelta) >= threshold){
-            var motorSpeed = -armDelta*armkP;
-            motorSpeed = Math.abs(motorSpeed) > limit ? limit * Math.signum(motorSpeed) : motorSpeed;
-            System.out.println("motor speed: " + motorSpeed);
-            setMotor(motorSpeed);
-            return false;
-          } else {
-            stopMotor();
-            return true;
-          }
-
-    
-      }
 }
 

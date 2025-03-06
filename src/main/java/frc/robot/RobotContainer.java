@@ -5,6 +5,8 @@
 package frc.robot;
 
 import java.io.File;
+import java.nio.file.OpenOption;
+import java.util.function.DoubleSupplier;
 
 import com.google.gson.internal.ObjectConstructor;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -12,6 +14,9 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.events.OneShotTriggerEvent;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.units.mutable.GenericMutableMeasureImpl;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
@@ -23,35 +28,46 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Subsystems.Camera;
 import frc.robot.Subsystems.SwerveSubsystem;
 import frc.robot.Subsystems.Elevator.ElevatorSubsystem;
-import frc.robot.Subsystems.Elevator.States.ElevatorPositionState;
+import frc.robot.Subsystems.Elevator.States.ElevatorManualState;
 import frc.robot.Subsystems.Pivot.ArmSubsystem;
-import frc.robot.Subsystems.Pivot.States.PivotPositionState;
+import frc.robot.Subsystems.Pivot.States.PivotAnalogManual;
+import frc.robot.Subsystems.Pivot.States.PivotManualState;
 import frc.robot.Subsystems.FloorIntake.FloorIntakeSubsystem;
+import frc.robot.Subsystems.FloorIntake.States.IntakePivotState;
 import frc.robot.Subsystems.FloorIntake.States.IntakeState;
 import frc.robot.Subsystems.FloorIntake.States.OuttakeState;
-import frc.robot.Subsystems.FloorIntake.States.PositionState;
 
 public class RobotContainer {
   public static SendableChooser<Command> autoChooser;
 
+
   public RobotContainer() {
     DriverStation.silenceJoystickConnectionWarning(true);
     configureBindings();
+    configureOperatorBindings();
     
+
     Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
-     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-     () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-     () -> MathUtil.applyDeadband(driverXbox.getRightX(), OperatorConstants.RIGHT_X_DEADBAND));
+     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), DriverConstants.LEFT_Y_DEADBAND),
+     () -> MathUtil.applyDeadband(driverXbox.getLeftX(), DriverConstants.LEFT_X_DEADBAND),
+     () -> MathUtil.applyDeadband(driverXbox.getRightX(), DriverConstants.RIGHT_X_DEADBAND));
 
 
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
     drivebase.getSubsystem();
+
+    
+    //Command intakePivot = new IntakePivotState(floorIntake, () -> MathUtil.applyDeadband(operatorXbox.getRightY(), OperatorConstants.RIGHT_Y_DEADBAND));
+    
 
     BuildAutoChooser();
   }
@@ -63,6 +79,7 @@ public class RobotContainer {
  private final ArmSubsystem pivot = new ArmSubsystem();
  private final FloorIntakeSubsystem floorIntake = new FloorIntakeSubsystem();
  private final ElevatorSubsystem elevator = new ElevatorSubsystem();
+ private final Camera camera = new Camera();
 
 
   private void configureBindings() {
@@ -72,34 +89,44 @@ public class RobotContainer {
 
   public void configureOperatorBindings()
   {
-    Trigger rightTrigger  = operatorXbox.rightTrigger(0.2);
-    Trigger rightBumper   = operatorXbox.rightBumper();
-    Trigger leftTrigger   = operatorXbox.leftTrigger(0.2);
-    Trigger leftBumper    = operatorXbox.leftBumper();
-    Trigger rightJoystick = operatorXbox.rightStick();
-    Trigger leftJoystick  = operatorXbox.leftStick();
-    Trigger xButton       = operatorXbox.x();
-    Trigger yButton       = operatorXbox.y();
-    Trigger aButton       = operatorXbox.a();
-    Trigger bButton       = operatorXbox.b();
-    Trigger arrowUp       = operatorXbox.povUp();
-    Trigger arrowDown     = operatorXbox.povDown();
-    Trigger arrowLeft     = operatorXbox.povLeft();
-    Trigger arrowRight    = operatorXbox.povRight();
 
+    floorIntake.setDefaultCommand(
+      new IntakePivotState(
+        floorIntake, 
+        () -> MathUtil.applyDeadband(operatorXbox.getRightY(), OperatorConstants.RIGHT_Y_DEADBAND))
+      );
 
+    pivot.setDefaultCommand(
+      new PivotManualState(
+        pivot, 
+        () -> MathUtil.applyDeadband(operatorXbox.getLeftTriggerAxis(), OperatorConstants.LEFT_TRIGGER_DEADBAND))
+      );
 
-    rightTrigger.whileTrue(new IntakeState(floorIntake, 1));
-    rightBumper.whileTrue(new IntakeState(floorIntake, -1));
+    operatorXbox.leftBumper().whileTrue(new PivotAnalogManual(pivot));
+
+    elevator.setDefaultCommand(
+      new ElevatorManualState(
+        elevator, 
+        () -> MathUtil.applyDeadband(operatorXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND))
+    );
+
+    operatorXbox.rightBumper().whileTrue(new IntakeState(floorIntake, 1));
+    operatorXbox.rightTrigger(0.2).whileTrue(new OuttakeState(floorIntake, -1));
+
+    //operatorXbox.povUp().whileTrue();
+
+    //rightTrigger.whileTrue(new IntakeState(floorIntake, 1));
+    //rightBumper.whileTrue(new IntakeState(floorIntake, -1));
 
     //rightJoystick.whileTrue(new IntakeState(floorIntake, 1));
     //rightJoystick.whileFalse(new IntakeState(floorIntake, -1));
 
-    aButton.whileTrue(new PositionState(floorIntake, "Floor"));
-    yButton.whileTrue(new PositionState(floorIntake, "Home"));
-    xButton.whileTrue(new PositionState(floorIntake, "Algae"));
-    bButton.whileTrue(new PositionState(floorIntake, "Trough"));
+    //aButton.whileTrue(new PositionState(floorIntake, "Floor"));
+    //yButton.whileTrue(new PositionState(floorIntake, "Home"));
+    //xButton.whileTrue(new PositionState(floorIntake, "Algae"));
+    //bButton.whileTrue(new PositionState(floorIntake, "Trough"));
 
+    /* 
     arrowUp.whileTrue(
       new ParallelCommandGroup(
         new PivotPositionState(pivot, "L4"),
@@ -118,12 +145,7 @@ public class RobotContainer {
         new ElevatorPositionState(elevator, "L2")
         )
     );
-    arrowDown.whileTrue(
-      new ParallelCommandGroup(
-        new PivotPositionState(pivot, "Home"),
-        new ElevatorPositionState(elevator, "Home")
-        )
-    );
+    
 
     leftBumper.whileTrue(
       new ParallelCommandGroup(
@@ -133,10 +155,11 @@ public class RobotContainer {
     
 
     leftTrigger.whileFalse(new PivotPositionState(pivot, "Intake"));
+    */
 
   }
   public Command getAutonomousCommand() {
-    return drivebase.getAutonomousCommand("8 Auto");
+    return null;
   }
 
   public void setMotorBrake(boolean brake)
@@ -148,4 +171,6 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
+
 }
+

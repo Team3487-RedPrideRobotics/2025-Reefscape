@@ -24,14 +24,21 @@ public final class Constants {
     public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms spark max velocity lag
     public static final double MAX_SPEED  = Units.feetToMeters(3);
    
-    public static class OperatorConstants
+    public static class DriverConstants
     {
-
-        // Joystick Deadband, and other things
         public static final double LEFT_X_DEADBAND  = 0.5;
         public static final double LEFT_Y_DEADBAND  = 0.5;
         public static final double RIGHT_X_DEADBAND = 0.5;
         public static final double TURN_CONSTANT    = 6;
+    }
+
+    public static class OperatorConstants
+    {
+      
+      public static final double RIGHT_Y_DEADBAND = 0.2;
+      public static final double LEFT_Y_DEADBAND = 0.2;
+
+      public static final double LEFT_TRIGGER_DEADBAND = 0.2;
     }
 
 
@@ -59,11 +66,16 @@ public final class Constants {
     public static final class ArmConstants
     {
       public static final int ARM_MOTOR_ID = 40;
+
+      public static final double PIVOT_SPEED = 0.2;
     }
     public static final class FloorConstants
     {
       public static final int FLOOR_INTAKE_MOTOR_ID = 41;
       public static final int FLOOR_PIVOT_MOTOR_ID = 42;
+
+      public static final double FlOOR_PIVOT_SPEED = 0.3;
+
 
     }
     

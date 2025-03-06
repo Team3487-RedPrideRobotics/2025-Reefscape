@@ -4,9 +4,10 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class FloorIntakeSubsystem {
+public class FloorIntakeSubsystem extends SubsystemBase{
     private SparkMax floorIntakeMotor, floorPivotMotor;
     private RelativeEncoder pivotEncoder;
 
@@ -42,23 +43,5 @@ public class FloorIntakeSubsystem {
         return pivotEncoder.getPosition();
     }
 
-    public boolean goToAngle(double pivot, double limit, double pivotkP, double threshold){
-        double pivotDelta = Math.abs(pivot) - Math.abs(getPivotValue());
-        System.out.println("pivot difference: " + pivotDelta);
-        System.out.println("pivot position: " + getPivotValue());
-
-        if(Math.abs(pivotDelta) >= threshold){
-            var motorSpeed = -pivotDelta*pivotkP;
-            motorSpeed = Math.abs(motorSpeed) > limit ? limit * Math.signum(motorSpeed) : motorSpeed;
-            System.out.println("motor speed: " + motorSpeed);
-            runFloorPivot(motorSpeed);
-            return false;
-          } else {
-            stopFloorPivot();
-            return true;
-          }
-
-    
-      }
 
 }
