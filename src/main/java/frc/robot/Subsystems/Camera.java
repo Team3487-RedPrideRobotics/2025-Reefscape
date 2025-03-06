@@ -18,7 +18,7 @@ public class Camera extends SubsystemBase {
 
         //camera2.setFPS(30);
         //camera2.setResolution(1152, 648);
-        
+        //test
 
         //camera1.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
         //camera2.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
