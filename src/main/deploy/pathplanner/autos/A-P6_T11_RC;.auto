@@ -7,13 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Middle Leave"
+            "pathName": "P6_T11"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": null
+            "name": "Floor Intake Shoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "T11_RC"
           }
         }
       ]

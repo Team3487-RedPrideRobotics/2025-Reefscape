@@ -10,7 +10,9 @@ import java.util.function.DoubleSupplier;
 
 import com.google.gson.internal.ObjectConstructor;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.events.OneShotTriggerEvent;
 
 import edu.wpi.first.math.MathUtil;
@@ -51,6 +53,9 @@ public class RobotContainer {
 
 
   public RobotContainer() {
+
+    
+
     DriverStation.silenceJoystickConnectionWarning(true);
     configureBindings();
     configureOperatorBindings();
@@ -68,7 +73,7 @@ public class RobotContainer {
     
     //Command intakePivot = new IntakePivotState(floorIntake, () -> MathUtil.applyDeadband(operatorXbox.getRightY(), OperatorConstants.RIGHT_Y_DEADBAND));
     
-
+    buildEventTriggers();
     BuildAutoChooser();
   }
 
@@ -111,55 +116,16 @@ public class RobotContainer {
     );
 
     operatorXbox.rightBumper().whileTrue(new IntakeState(floorIntake, 1));
-    operatorXbox.rightTrigger(0.2).whileTrue(new OuttakeState(floorIntake, -1));
+    operatorXbox.rightTrigger(0.2).whileTrue(new OuttakeState(floorIntake, 1));
 
-    //operatorXbox.povUp().whileTrue();
-
-    //rightTrigger.whileTrue(new IntakeState(floorIntake, 1));
-    //rightBumper.whileTrue(new IntakeState(floorIntake, -1));
-
-    //rightJoystick.whileTrue(new IntakeState(floorIntake, 1));
-    //rightJoystick.whileFalse(new IntakeState(floorIntake, -1));
-
-    //aButton.whileTrue(new PositionState(floorIntake, "Floor"));
-    //yButton.whileTrue(new PositionState(floorIntake, "Home"));
-    //xButton.whileTrue(new PositionState(floorIntake, "Algae"));
-    //bButton.whileTrue(new PositionState(floorIntake, "Trough"));
-
-    /* 
-    arrowUp.whileTrue(
-      new ParallelCommandGroup(
-        new PivotPositionState(pivot, "L4"),
-        new ElevatorPositionState(elevator, "L4")
-        )
-    );
-    arrowLeft.whileTrue(
-      new ParallelCommandGroup(
-        new PivotPositionState(pivot, "LMid"),
-        new ElevatorPositionState(elevator, "L3")
-        )
-    );
-    arrowRight.whileTrue(
-      new ParallelCommandGroup(
-        new PivotPositionState(pivot, "LMid"),
-        new ElevatorPositionState(elevator, "L2")
-        )
-    );
-    
-
-    leftBumper.whileTrue(
-      new ParallelCommandGroup(
-        new PivotPositionState(pivot, "Home"),
-        new ElevatorPositionState(elevator, "Intake"))
-    );
-    
-
-    leftTrigger.whileFalse(new PivotPositionState(pivot, "Intake"));
-    */
 
   }
   public Command getAutonomousCommand() {
-    return null;
+    return autoChooser.getSelected();
+  }
+
+  public void buildEventTriggers(){
+    NamedCommands.registerCommand("Floor Intake Shoot", new OuttakeState(floorIntake, 1));
   }
 
   public void setMotorBrake(boolean brake)
