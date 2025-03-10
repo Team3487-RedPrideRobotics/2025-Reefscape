@@ -29,7 +29,7 @@ public class IntakePivotState extends Command
 
     @Override
     public void execute(){
-        subsystem.runFloorPivot(intakeSpeed.getAsDouble()*Constants.FloorConstants.FlOOR_PIVOT_SPEED);
+        subsystem.runFloorPivot(-intakeSpeed.getAsDouble()*Constants.FloorConstants.FlOOR_PIVOT_SPEED);
     }
 
     @Override

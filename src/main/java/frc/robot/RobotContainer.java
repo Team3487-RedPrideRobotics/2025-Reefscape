@@ -93,7 +93,7 @@ public class RobotContainer {
     floorIntake.setDefaultCommand(
       new IntakePivotState(
         floorIntake, 
-        () -> MathUtil.applyDeadband(-operatorXbox.getRightY(), OperatorConstants.RIGHT_Y_DEADBAND))
+        () -> MathUtil.applyDeadband(operatorXbox.getRightY(), OperatorConstants.RIGHT_Y_DEADBAND))
       );
 
     pivot.setDefaultCommand(
