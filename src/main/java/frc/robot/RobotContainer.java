@@ -50,48 +50,50 @@ import frc.robot.Subsystems.FloorIntake.States.OuttakeState;
 
 public class RobotContainer {
   public static SendableChooser<Command> autoChooser;
+  
+  private final SwerveSubsystem drivebase;
+  private final ArmSubsystem pivot;
+  private final FloorIntakeSubsystem floorIntake;
+  private final ElevatorSubsystem elevator;
+  private final Camera camera;
 
+  private final CommandXboxController driverXbox;
+  final CommandXboxController operatorXbox;
 
   public RobotContainer() {
-
-    
-
     DriverStation.silenceJoystickConnectionWarning(true);
-    configureBindings();
+
+    driverXbox = new CommandXboxController(1);
+    operatorXbox = new CommandXboxController(0);
+   
+    drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
+    pivot = new ArmSubsystem();
+    floorIntake = new FloorIntakeSubsystem();
+    elevator = new ElevatorSubsystem();
+    camera = new Camera();
+   
+    configureDriverBindings();
     configureOperatorBindings();
     
+    buildNamedCommands();
+    BuildAutoChooser();
+  }
 
+
+  private void configureDriverBindings() {
+    
     Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
      () -> MathUtil.applyDeadband(driverXbox.getLeftY(), DriverConstants.LEFT_Y_DEADBAND),
      () -> MathUtil.applyDeadband(driverXbox.getLeftX(), DriverConstants.LEFT_X_DEADBAND),
      () -> MathUtil.applyDeadband(driverXbox.getRightX(), DriverConstants.RIGHT_X_DEADBAND));
 
-
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
     drivebase.getSubsystem();
-
     
-    //Command intakePivot = new IntakePivotState(floorIntake, () -> MathUtil.applyDeadband(operatorXbox.getRightY(), OperatorConstants.RIGHT_Y_DEADBAND));
-    
-    buildEventTriggers();
-    BuildAutoChooser();
-  }
-
- final CommandXboxController driverXbox = new CommandXboxController(1);
- final CommandXboxController operatorXbox = new CommandXboxController(0);
-
- private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
- private final ArmSubsystem pivot = new ArmSubsystem();
- private final FloorIntakeSubsystem floorIntake = new FloorIntakeSubsystem();
- private final ElevatorSubsystem elevator = new ElevatorSubsystem();
- private final Camera camera = new Camera();
-
-
-  private void configureBindings() {
     driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
     driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
   }
-//test
+
   public void configureOperatorBindings()
   {
 
@@ -120,11 +122,12 @@ public class RobotContainer {
 
 
   }
+ 
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
 
-  public void buildEventTriggers(){
+  public void buildNamedCommands(){
     NamedCommands.registerCommand("Floor Intake Shoot", new OuttakeState(floorIntake, 1));
   }
 
