@@ -26,7 +26,7 @@ public class FloorIntakeSubsystem extends SubsystemBase{
 
     public void runFloorPivot(double balkanRage)
     {
-        floorIntakeMotor.set(balkanRage);
+        floorPivotMotor.set(balkanRage);
     }
 
     public void stopFloorIntake()
