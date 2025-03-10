@@ -47,6 +47,7 @@ import frc.robot.Subsystems.FloorIntake.FloorIntakeSubsystem;
 import frc.robot.Subsystems.FloorIntake.States.IntakePivotState;
 import frc.robot.Subsystems.FloorIntake.States.IntakeState;
 import frc.robot.Subsystems.FloorIntake.States.OuttakeState;
+import frc.robot.Subsystems.FloorIntake.States.SlowOuttakeState;
 
 public class RobotContainer {
   public static SendableChooser<Command> autoChooser;
@@ -129,7 +130,7 @@ public class RobotContainer {
   }
 
   public void buildNamedCommands(){
-    NamedCommands.registerCommand("Floor Intake Shoot", new OuttakeState(floorIntake, 1));
+    NamedCommands.registerCommand("Floor Intake Shoot", new SlowOuttakeState(floorIntake));
   }
 
   public void setMotorBrake(boolean brake)
