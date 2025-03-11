@@ -16,7 +16,7 @@ public class SlowOuttakeState extends Command
     }
 
     public void initialize(){
-        subsystem.runFloorIntake(-0.2);
+        subsystem.runFloorIntake(-0.5);
     }
 
     public void end(boolean interrupted)
