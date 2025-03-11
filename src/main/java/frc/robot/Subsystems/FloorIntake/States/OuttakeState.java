@@ -17,7 +17,7 @@ public class OuttakeState extends Command
     }
 
     public void initialize(){
-        subsystem.runFloorIntake(intakeSpeed);
+        subsystem.runFloorIntake(-1);
     }
 
     public void end(boolean interrupted)

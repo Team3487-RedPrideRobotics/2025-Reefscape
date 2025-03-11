@@ -24,6 +24,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     
     public void runMotors(double power) {
         elevatorMotorLeft.set(-power);
+        
         elevatorMotorRight.set(power);
     }
 

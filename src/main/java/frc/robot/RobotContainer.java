@@ -10,7 +10,9 @@ import java.util.function.DoubleSupplier;
 
 import com.google.gson.internal.ObjectConstructor;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.events.OneShotTriggerEvent;
 
 import edu.wpi.first.math.MathUtil;
@@ -45,48 +47,54 @@ import frc.robot.Subsystems.FloorIntake.FloorIntakeSubsystem;
 import frc.robot.Subsystems.FloorIntake.States.IntakePivotState;
 import frc.robot.Subsystems.FloorIntake.States.IntakeState;
 import frc.robot.Subsystems.FloorIntake.States.OuttakeState;
+import frc.robot.Subsystems.FloorIntake.States.SlowOuttakeState;
 
 public class RobotContainer {
   public static SendableChooser<Command> autoChooser;
+  
+  private final SwerveSubsystem drivebase;
+  private final ArmSubsystem pivot;
+  private final FloorIntakeSubsystem floorIntake;
+  private final ElevatorSubsystem elevator;
+  private final Camera camera;
 
+  private final CommandXboxController driverXbox;
+  final CommandXboxController operatorXbox;
 
   public RobotContainer() {
     DriverStation.silenceJoystickConnectionWarning(true);
-    configureBindings();
+
+    driverXbox = new CommandXboxController(1);
+    operatorXbox = new CommandXboxController(0);
+   
+    drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
+    pivot = new ArmSubsystem();
+    floorIntake = new FloorIntakeSubsystem();
+    elevator = new ElevatorSubsystem();
+    camera = new Camera();
+   
+    configureDriverBindings();
     configureOperatorBindings();
     
+    buildNamedCommands();
+    BuildAutoChooser();
+  }
 
+
+  private void configureDriverBindings() {
+    
     Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
      () -> MathUtil.applyDeadband(driverXbox.getLeftY(), DriverConstants.LEFT_Y_DEADBAND),
      () -> MathUtil.applyDeadband(driverXbox.getLeftX(), DriverConstants.LEFT_X_DEADBAND),
      () -> MathUtil.applyDeadband(driverXbox.getRightX(), DriverConstants.RIGHT_X_DEADBAND));
 
-
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
     drivebase.getSubsystem();
-
     
-    //Command intakePivot = new IntakePivotState(floorIntake, () -> MathUtil.applyDeadband(operatorXbox.getRightY(), OperatorConstants.RIGHT_Y_DEADBAND));
-    
-
-    BuildAutoChooser();
-  }
-
- final CommandXboxController driverXbox = new CommandXboxController(1);
- final CommandXboxController operatorXbox = new CommandXboxController(0);
-
- private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
- private final ArmSubsystem pivot = new ArmSubsystem();
- private final FloorIntakeSubsystem floorIntake = new FloorIntakeSubsystem();
- private final ElevatorSubsystem elevator = new ElevatorSubsystem();
- private final Camera camera = new Camera();
-
-
-  private void configureBindings() {
     driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
     driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
   }
-//test
+
   public void configureOperatorBindings()
   {
 
@@ -111,54 +119,18 @@ public class RobotContainer {
     );
 
     operatorXbox.rightBumper().whileTrue(new IntakeState(floorIntake, 1));
-    operatorXbox.rightTrigger(0.2).whileTrue(new OuttakeState(floorIntake, -1));
-    //operatorXbox.povUp().whileTrue();
+    operatorXbox.rightTrigger(0.2).whileTrue(new OuttakeState(floorIntake, 1));
 
-    //rightTrigger.whileTrue(new IntakeState(floorIntake, 1));
-    //rightBumper.whileTrue(new IntakeState(floorIntake, -1));
-
-    //rightJoystick.whileTrue(new IntakeState(floorIntake, 1));
-    //rightJoystick.whileFalse(new IntakeState(floorIntake, -1));
-
-    //aButton.whileTrue(new PositionState(floorIntake, "Floor"));
-    //yButton.whileTrue(new PositionState(floorIntake, "Home"));
-    //xButton.whileTrue(new PositionState(floorIntake, "Algae"));
-    //bButton.whileTrue(new PositionState(floorIntake, "Trough"));
-
-    /* 
-    arrowUp.whileTrue(
-      new ParallelCommandGroup(
-        new PivotPositionState(pivot, "L4"),
-        new ElevatorPositionState(elevator, "L4")
-        )
-    );
-    arrowLeft.whileTrue(
-      new ParallelCommandGroup(
-        new PivotPositionState(pivot, "LMid"),
-        new ElevatorPositionState(elevator, "L3")
-        )
-    );
-    arrowRight.whileTrue(
-      new ParallelCommandGroup(
-        new PivotPositionState(pivot, "LMid"),
-        new ElevatorPositionState(elevator, "L2")
-        )
-    );
-    
-
-    leftBumper.whileTrue(
-      new ParallelCommandGroup(
-        new PivotPositionState(pivot, "Home"),
-        new ElevatorPositionState(elevator, "Intake"))
-    );
-    
-
-    leftTrigger.whileFalse(new PivotPositionState(pivot, "Intake"));
-    */
 
   }
+ 
   public Command getAutonomousCommand() {
-    return null;
+    //return autoChooser.getSelected();
+    return new PathPlannerAuto("A-P4_T10;");
+  }
+
+  public void buildNamedCommands(){
+    NamedCommands.registerCommand("Floor Intake Shoot", new SlowOuttakeState(floorIntake));
   }
 
   public void setMotorBrake(boolean brake)

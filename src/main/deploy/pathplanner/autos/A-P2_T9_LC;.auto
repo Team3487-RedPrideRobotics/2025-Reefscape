@@ -7,13 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Bottom to Reef"
+            "pathName": "P2_T9"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": null
+            "name": "Floor Intake Shoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "T9_LC"
           }
         }
       ]
