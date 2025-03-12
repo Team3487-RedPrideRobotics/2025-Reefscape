@@ -84,15 +84,24 @@ public class RobotContainer {
   private void configureDriverBindings() {
     
     Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
-     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), DriverConstants.LEFT_Y_DEADBAND),
-     () -> MathUtil.applyDeadband(driverXbox.getLeftX(), DriverConstants.LEFT_X_DEADBAND),
-     () -> MathUtil.applyDeadband(driverXbox.getRightX(), DriverConstants.RIGHT_X_DEADBAND));
+      () -> MathUtil.applyDeadband(driverXbox.getLeftY(), DriverConstants.LEFT_Y_DEADBAND),
+      () -> MathUtil.applyDeadband(driverXbox.getLeftX(), DriverConstants.LEFT_X_DEADBAND),
+      () -> MathUtil.applyDeadband(driverXbox.getRightX(), DriverConstants.RIGHT_X_DEADBAND),
+     true);
+
+    Command AHHHH_WHY_HAVE_YOU_FORSAKEN_ME = drivebase.driveCommand( 
+      () -> MathUtil.applyDeadband(driverXbox.getLeftY(), DriverConstants.LEFT_Y_DEADBAND),
+      () -> MathUtil.applyDeadband(driverXbox.getLeftX(), DriverConstants.LEFT_X_DEADBAND),
+      () -> MathUtil.applyDeadband(driverXbox.getRightX(), DriverConstants.RIGHT_X_DEADBAND),
+          false);
 
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
     drivebase.getSubsystem();
     
     driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
     driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+
+    driverXbox.leftBumper().whileTrue(AHHHH_WHY_HAVE_YOU_FORSAKEN_ME);
   }
 
   public void configureOperatorBindings()

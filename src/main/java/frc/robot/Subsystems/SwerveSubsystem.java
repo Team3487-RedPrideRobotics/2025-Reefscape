@@ -41,7 +41,7 @@ public class SwerveSubsystem extends SubsystemBase {
   
   public SwerveSubsystem(File directory) {
     try {
-      SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH; //schmitt added this line because mentors said so
+      SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH; 
       swerveDrive = new SwerveParser(directory).createSwerveDrive(Constants.MAX_SPEED);
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -128,13 +128,13 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param rotation Joystick input for rotation.
    * @return Command to drive the robot.
    */
-  public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier rotation) {
+  public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier rotation, boolean fieldRelative) {
     return run(() -> {
       swerveDrive.drive(new Translation2d(
         translationX.getAsDouble() * swerveDrive.getMaximumChassisVelocity(),
         translationY.getAsDouble() * swerveDrive.getMaximumChassisVelocity()),
         rotation.getAsDouble() * swerveDrive.getMaximumChassisAngularVelocity(),
-        true,
+        fieldRelative,
         false
       );
     });
