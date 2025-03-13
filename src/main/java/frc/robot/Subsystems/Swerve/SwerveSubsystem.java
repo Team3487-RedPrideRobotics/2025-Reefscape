@@ -24,6 +24,7 @@ import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 import java.io.File;
+import java.net.Socket;
 import java.util.Locale.Category;
 import java.util.function.DoubleSupplier;
 
@@ -222,5 +223,29 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public Command getAutonomousCommand(String pathName) {
     return new PathPlannerAuto(pathName);
+  }
+
+  public boolean swerveDrivePID(double goalValue, double currentValue,double limit, double kP, double threshold, boolean updatingX)
+  {
+    double delta = Math.abs(goalValue) - Math.abs(currentValue);
+
+    
+    if(Math.abs(delta) >= threshold){
+      var speed = -delta*kP;
+      speed = Math.abs(speed) > limit ? limit * Math.signum(speed) : speed;
+      if(updatingX)
+      {
+        drive(new Translation2d(-speed, 0), 0, false);
+      } else {
+        drive(new Translation2d(0, speed), 0, false);
+      }
+      System.out.println("turn up that skibidi RIZZ");
+      return false;
+    } else {
+      System.out.println("Erm what the sigma");
+      drive(new Translation2d(0,0), 0 ,false);
+      return true;
+    }
+
   }
 }

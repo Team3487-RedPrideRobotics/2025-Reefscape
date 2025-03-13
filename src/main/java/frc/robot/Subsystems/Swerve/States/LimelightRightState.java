@@ -9,7 +9,7 @@ import frc.robot.LimelightHelpers;
 import frc.robot.Subsystems.Pivot.ArmSubsystem;
 import frc.robot.Subsystems.Swerve.SwerveSubsystem;
 
-public class LimelightLeftState extends Command{
+public class LimelightRightState extends Command{
     private SwerveSubsystem subsystem;
 
     boolean forward;
@@ -17,7 +17,7 @@ public class LimelightLeftState extends Command{
     double aprilTag;
 
 
-    public LimelightLeftState(SwerveSubsystem skibidi)
+    public LimelightRightState(SwerveSubsystem skibidi)
     {
         
         subsystem = skibidi;
@@ -51,7 +51,7 @@ public class LimelightLeftState extends Command{
                     }
                 } else {
                     System.out.println("... ... ...DO YOU KNOW WHAT ELSE IS MASSIVE.... LOWWWWWWWWWWWWWWWWW");
-                    if(subsystem.swerveDrivePID(34.87, tx, 0.6, 0.02, 0.1, false))
+                    if(subsystem.swerveDrivePID(22, tx, 0.6, 0.02, 0.1, false))
                     {
                         sideways = true;
                     }
