@@ -97,7 +97,15 @@ public class RobotContainer {
       () -> MathUtil.applyDeadband(driverXbox.getRightX(), DriverConstants.RIGHT_X_DEADBAND),
           false);
 
+<<<<<<< HEAD
 
+=======
+    Command floorMan = drivebase.driveCommand(
+      () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), DriverConstants.LEFT_Y_DEADBAND),
+      () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), DriverConstants.LEFT_X_DEADBAND),
+      () -> MathUtil.applyDeadband(driverXbox.getRightX(), DriverConstants.RIGHT_X_DEADBAND),
+          false);
+>>>>>>> main
 
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
     drivebase.getSubsystem();
@@ -106,9 +114,13 @@ public class RobotContainer {
     driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
 
     driverXbox.leftBumper().whileTrue(AHHHH_WHY_HAVE_YOU_FORSAKEN_ME);
+<<<<<<< HEAD
 
     driverXbox.povLeft().whileTrue(new LimelightLeftState(drivebase));
     driverXbox.povRight().whileTrue(new LimelightRightState(drivebase));
+=======
+    driverXbox.rightBumper().whileTrue(floorMan);
+>>>>>>> main
   }
 
   public void configureOperatorBindings()
