@@ -11,28 +11,30 @@ import frc.robot.Subsystems.Elevator.ElevatorSubsystem;
 import frc.robot.Subsystems.FloorIntake.FloorIntakeSubsystem;
 import frc.robot.Subsystems.Pivot.ArmSubsystem;
 
-public class ElevatorManualState extends Command
+public class ElevatorL4State extends Command
 {
     private ElevatorSubsystem subsystem;
-    private DoubleSupplier elevatorSpeed;
+    boolean done;
 
-    public ElevatorManualState(ElevatorSubsystem skibidi, DoubleSupplier balkanRage)
-    {
-        
+    public ElevatorL4State(ElevatorSubsystem skibidi)
+    {   
+        super();
         subsystem = skibidi;
-        elevatorSpeed = balkanRage;
 
         addRequirements(skibidi);
     }
 
     @Override
     public void initialize(){
-        
+        done = false;
     }
 
     @Override
     public void execute(){
-        subsystem.runMotors(elevatorSpeed.getAsDouble());
+        if( subsystem.elevatorPID(113, 1, 0.2, 0.4))
+        {
+            done = true;
+        }
     }
 
     @Override
@@ -41,6 +43,10 @@ public class ElevatorManualState extends Command
         subsystem.stopMotors();
     }
 
-    
+    @Override
+    public boolean isFinished(){
+        System.out.println(done);
+        return done;
+    }
     
 }

@@ -42,6 +42,7 @@ public class SwerveSubsystem extends SubsystemBase {
   private final SwerveDrive swerveDrive;
   File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
   public RobotConfig config;
+  double LooksMaxLevel;
   
   //5010 mentor said to add this line here SwerveDriveTelemetry.Verbosity = TelemetryVerbosity.HIGH;
   
@@ -134,11 +135,12 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param rotation Joystick input for rotation.
    * @return Command to drive the robot.
    */
-  public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier rotation, boolean fieldRelative) {
+  public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier rotation, boolean fieldRelative, DoubleSupplier elevator) {
+
     return run(() -> {
       swerveDrive.drive(new Translation2d(
-        translationX.getAsDouble() * swerveDrive.getMaximumChassisVelocity(),
-        translationY.getAsDouble() * swerveDrive.getMaximumChassisVelocity()),
+        translationX.getAsDouble() * swerveDrive.getMaximumChassisVelocity() * (-0.1*Math.cbrt(elevator.getAsDouble()-50) + 0.634),
+        translationY.getAsDouble() * swerveDrive.getMaximumChassisVelocity() * (-0.1*Math.cbrt(elevator.getAsDouble()-50) + 0.634)),
         rotation.getAsDouble() * swerveDrive.getMaximumChassisAngularVelocity(),
         fieldRelative,
         false
@@ -227,8 +229,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public boolean swerveDrivePID(double goalValue, double currentValue,double limit, double kP, double threshold, boolean updatingX)
   {
-    double delta = Math.abs(goalValue) - Math.abs(currentValue);
-
+    //double delta = Math.abs(goalValue) - Math.abs(currentValue);
+    double delta = goalValue - currentValue;
     
     if(Math.abs(delta) >= threshold){
       var speed = -delta*kP;
@@ -239,10 +241,8 @@ public class SwerveSubsystem extends SubsystemBase {
       } else {
         drive(new Translation2d(0, speed), 0, false);
       }
-      System.out.println("turn up that skibidi RIZZ");
       return false;
     } else {
-      System.out.println("Erm what the sigma");
       drive(new Translation2d(0,0), 0 ,false);
       return true;
     }

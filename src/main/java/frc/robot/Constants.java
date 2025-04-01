@@ -22,7 +22,7 @@ public final class Constants {
     public static final double ROBOT_MASS = (104) * 0.453592; // kg per pound
     public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
     public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms spark max velocity lag
-    public static final double MAX_SPEED  = Units.feetToMeters(8);
+    public static final double MAX_SPEED  = Units.feetToMeters(12);
    
     public static class DriverConstants
     {
@@ -46,8 +46,8 @@ public final class Constants {
     {
 
         public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.5, 0, 0);
-        public static final PIDConstants ANGLE_PID       = new PIDConstants(0.5, 0, 0.01);
-        public static final double AUTO_MAX_SPEED = 2.57; //  meters per second
+        public static final PIDConstants ANGLE_PID       = new PIDConstants(0, 0, 0.01);
+        public static final double AUTO_MAX_SPEED = 0.5; //  meters per second
     }
 
     
@@ -66,6 +66,7 @@ public final class Constants {
     public static final class ArmConstants
     {
       public static final int ARM_MOTOR_ID = 40;
+      public static final int SHOOT_MOTOR_ID = 45;
 
       public static final double PIVOT_SPEED = 0.2;
     }

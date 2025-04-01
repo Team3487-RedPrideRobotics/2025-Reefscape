@@ -19,15 +19,14 @@ public class LimelightRightState extends Command{
 
     public LimelightRightState(SwerveSubsystem skibidi)
     {
-        
+        super();  
         subsystem = skibidi;
         addRequirements(skibidi);
     }
 
     @Override
     public void initialize(){
-        forward = false;
-        sideways = false;
+
         aprilTag = LimelightHelpers.getFiducialID("limelight-bambino");
 
         
@@ -36,31 +35,13 @@ public class LimelightRightState extends Command{
     @Override
     public void execute(){
         double tx = LimelightHelpers.getTX("limelight-bambino");
-        double ty = LimelightHelpers.getTY("limelight-bambino");
         double currentLime = LimelightHelpers.getFiducialID("limelight-bambino");
         
-            if(aprilTag == currentLime)
-            {
-                if(!forward)
-                {
-                    System.out.println("elephant");
-                    if(subsystem.swerveDrivePID(-2.5, ty, 1, 0.075, 0.1, true))
-                    {
-                        System.out.println("Thats massive");
-                        forward = true;
-                    }
-                } else {
-                    System.out.println("... ... ...DO YOU KNOW WHAT ELSE IS MASSIVE.... LOWWWWWWWWWWWWWWWWW");
-                    if(subsystem.swerveDrivePID(22, tx, 0.6, 0.02, 0.1, false))
-                    {
-                        sideways = true;
-                    }
-                }
-            }
-        
-       
-        
-        
+        if(aprilTag == currentLime)
+        {
+            subsystem.swerveDrivePID(-4.8, tx, 0.6, 0.02, 0.1, false);
+        }
+           
 
 
         

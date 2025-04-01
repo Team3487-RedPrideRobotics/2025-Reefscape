@@ -9,54 +9,64 @@ import frc.robot.LimelightHelpers;
 import frc.robot.Subsystems.Pivot.ArmSubsystem;
 import frc.robot.Subsystems.Swerve.SwerveSubsystem;
 
-public class LimelightLeftState extends Command{
+public class LimelightForwardState extends Command{
     private SwerveSubsystem subsystem;
-
-    boolean forward;
-    boolean sideways;
+    
     double aprilTag;
     boolean done;
 
-    public LimelightLeftState(SwerveSubsystem skibidi)
+
+    public LimelightForwardState(SwerveSubsystem skibidi)
     {
-        super();  
+        
         subsystem = skibidi;
         addRequirements(skibidi);
     }
 
     @Override
     public void initialize(){
-
         aprilTag = LimelightHelpers.getFiducialID("limelight-bambino");
         done = false;
-        
+        System.out.println("EWJKEBFIOUQWEFHUIEOJFOIJWEOIFJIOWEJFIOWE");
     }
 
     @Override
     public void execute(){
-        double tx = LimelightHelpers.getTX("limelight-bambino");
+        double ty = LimelightHelpers.getTY("limelight-bambino");
         double currentLime = LimelightHelpers.getFiducialID("limelight-bambino");
         
-        if(aprilTag == currentLime)
-        {
-            if(subsystem.swerveDrivePID(24.5, tx, 0.2, 0.08, 0.2, false)){
-                done = true;
+            if(aprilTag == currentLime)
+            {
+                if(subsystem.swerveDrivePID(22, ty, 1, 0.075, 0.2, true))
+                {
+                    System.out.println("Thats massive");
+                    done = true;
+                }
+                 
             }
+
+        if(ty == 0){
+            done = true;
         }
-           
-
-
-        
     }
+        
+       
+        
+        
+
+    
+    
 
     @Override
     public void end(boolean interrupted)
     {
         subsystem.drive(new Translation2d(0,0), 0, false);
+
     }
 
-    @Override
+    @Override 
     public boolean isFinished(){
+        System.out.println("ahh:" + done);
         return done;
     }
     

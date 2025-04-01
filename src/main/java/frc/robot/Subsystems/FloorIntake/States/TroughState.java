@@ -1,4 +1,4 @@
-package frc.robot.Subsystems.Elevator.States;
+package frc.robot.Subsystems.FloorIntake.States;
 
 import java.lang.module.ModuleDescriptor.Requires;
 import java.util.function.DoubleSupplier;
@@ -11,36 +11,40 @@ import frc.robot.Subsystems.Elevator.ElevatorSubsystem;
 import frc.robot.Subsystems.FloorIntake.FloorIntakeSubsystem;
 import frc.robot.Subsystems.Pivot.ArmSubsystem;
 
-public class ElevatorManualState extends Command
+public class TroughState extends Command
 {
-    private ElevatorSubsystem subsystem;
-    private DoubleSupplier elevatorSpeed;
+    private FloorIntakeSubsystem subsystem;
+    private boolean done;
 
-    public ElevatorManualState(ElevatorSubsystem skibidi, DoubleSupplier balkanRage)
-    {
-        
+    public TroughState(FloorIntakeSubsystem skibidi)
+    {   
+        super();
         subsystem = skibidi;
-        elevatorSpeed = balkanRage;
 
         addRequirements(skibidi);
     }
 
     @Override
     public void initialize(){
-        
+        done = false;
     }
 
     @Override
     public void execute(){
-        subsystem.runMotors(elevatorSpeed.getAsDouble());
+        if(subsystem.FloorPID(5, 0.5, 0.2, 1)){
+            done = true;
+        }
     }
 
     @Override
     public void end(boolean interrupted)
     {
-        subsystem.stopMotors();
+        subsystem.stopFloorPivot();
     }
 
-    
-    
+    @Override
+    public boolean isFinished(){
+        return done;
+    }
+        
 }
