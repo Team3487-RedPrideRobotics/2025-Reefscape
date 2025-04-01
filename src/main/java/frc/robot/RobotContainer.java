@@ -95,9 +95,12 @@ public class RobotContainer {
 
   private void configureDriverBindings() {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     
     Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
 =======
+=======
+>>>>>>> Stashed changes
     //
     // Creating Double Supplier for elevator sensor, allowing slowing down while elevator high
     //
@@ -107,6 +110,9 @@ public class RobotContainer {
     // Driving field oriented
     //
     Command FieldOriented = drivebase.driveCommand(
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
       () -> MathUtil.applyDeadband(driverXbox.getLeftY(), DriverConstants.LEFT_Y_DEADBAND),
       () -> MathUtil.applyDeadband(driverXbox.getLeftX(), DriverConstants.LEFT_X_DEADBAND),
@@ -131,6 +137,12 @@ public class RobotContainer {
       () -> MathUtil.applyDeadband(driverXbox.getRightX(), DriverConstants.RIGHT_X_DEADBAND),
           false);
 
+<<<<<<< Updated upstream
+=======
+            
+    
+
+>>>>>>> Stashed changes
     drivebase.setDefaultCommand(FieldOriented);
     drivebase.getSubsystem();
     
@@ -144,9 +156,12 @@ public class RobotContainer {
     driverXbox.y().toggleOnTrue(new FloorIntakeZeroState(floorIntake));
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     driverXbox.leftBumper().whileTrue(AHHHH_WHY_HAVE_YOU_FORSAKEN_ME);
     driverXbox.rightBumper().whileTrue(floorMan);
 =======
+=======
+>>>>>>> Stashed changes
     
     //
     // Left Bumper: Activate front centric
@@ -214,9 +229,12 @@ public class RobotContainer {
     );
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     operatorXbox.rightBumper().whileTrue(new IntakeState(floorIntake, 1));
     operatorXbox.rightTrigger(0.2).whileTrue(new OuttakeState(floorIntake, 1));
 =======
+=======
+>>>>>>> Stashed changes
     //
     // Right Bumper intakes both pivot and floor intake
     //
@@ -264,6 +282,7 @@ public class RobotContainer {
  
   public Command getAutonomousCommand() {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     //return autoChooser.getSelected();
     return new PathPlannerAuto("A-P4_T10;");
   }
@@ -271,6 +290,8 @@ public class RobotContainer {
   public void buildNamedCommands(){
     NamedCommands.registerCommand("Floor Intake Shoot", new SlowOuttakeState(floorIntake));
 =======
+=======
+>>>>>>> Stashed changes
     // returns what the AutoChooser selected
     return autoChooser.getSelected();
   }
@@ -304,6 +325,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("Limelight Forward", new LimelightForwardState(drivebase));
     NamedCommands.registerCommand("Forward 0.5", new ForwardState(drivebase).withTimeout(0.5));
     NamedCommands.registerCommand("Forward 1.5", new ForwardState(drivebase).withTimeout(1.5));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   }
 
