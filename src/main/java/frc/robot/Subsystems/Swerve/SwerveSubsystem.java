@@ -1,15 +1,20 @@
-package frc.robot.Subsystems;
+package frc.robot.Subsystems.Swerve;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
@@ -19,6 +24,7 @@ import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 import java.io.File;
+import java.net.Socket;
 import java.util.Locale.Category;
 import java.util.function.DoubleSupplier;
 
@@ -36,6 +42,7 @@ public class SwerveSubsystem extends SubsystemBase {
   private final SwerveDrive swerveDrive;
   File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
   public RobotConfig config;
+  double LooksMaxLevel;
   
   //5010 mentor said to add this line here SwerveDriveTelemetry.Verbosity = TelemetryVerbosity.HIGH;
   
@@ -128,11 +135,12 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param rotation Joystick input for rotation.
    * @return Command to drive the robot.
    */
-  public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier rotation, boolean fieldRelative) {
+  public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier rotation, boolean fieldRelative, DoubleSupplier elevator) {
+
     return run(() -> {
       swerveDrive.drive(new Translation2d(
-        translationX.getAsDouble() * swerveDrive.getMaximumChassisVelocity(),
-        translationY.getAsDouble() * swerveDrive.getMaximumChassisVelocity()),
+        translationX.getAsDouble() * swerveDrive.getMaximumChassisVelocity() * (-0.1*Math.cbrt(elevator.getAsDouble()-50) + 0.634),
+        translationY.getAsDouble() * swerveDrive.getMaximumChassisVelocity() * (-0.1*Math.cbrt(elevator.getAsDouble()-50) + 0.634)),
         rotation.getAsDouble() * swerveDrive.getMaximumChassisAngularVelocity(),
         fieldRelative,
         false
@@ -148,7 +156,6 @@ public class SwerveSubsystem extends SubsystemBase {
       //driveFieldOriented(new ChassisSpeeds(translation.getX(), translation.getY(), rot));
     //});
   }
-
   @Override
   public void periodic() {
     // Periodic code can be added here
@@ -218,5 +225,27 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public Command getAutonomousCommand(String pathName) {
     return new PathPlannerAuto(pathName);
+  }
+
+  public boolean swerveDrivePID(double goalValue, double currentValue,double limit, double kP, double threshold, boolean updatingX)
+  {
+    //double delta = Math.abs(goalValue) - Math.abs(currentValue);
+    double delta = goalValue - currentValue;
+    
+    if(Math.abs(delta) >= threshold){
+      var speed = -delta*kP;
+      speed = Math.abs(speed) > limit ? limit * Math.signum(speed) : speed;
+      if(updatingX)
+      {
+        drive(new Translation2d(-speed, 0), 0, false);
+      } else {
+        drive(new Translation2d(0, speed), 0, false);
+      }
+      return false;
+    } else {
+      drive(new Translation2d(0,0), 0 ,false);
+      return true;
+    }
+
   }
 }

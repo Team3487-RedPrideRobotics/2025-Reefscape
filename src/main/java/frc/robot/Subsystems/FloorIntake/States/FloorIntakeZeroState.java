@@ -1,4 +1,5 @@
-package frc.robot.Subsystems.Pivot.States;
+
+package frc.robot.Subsystems.FloorIntake.States;
 
 import java.lang.module.ModuleDescriptor.Requires;
 import java.util.function.DoubleSupplier;
@@ -6,13 +7,13 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Subsystems.FloorIntake.FloorIntakeSubsystem;
-import frc.robot.Subsystems.Pivot.ArmSubsystem;
 
-public class PivotAnalogManual extends Command
+public class FloorIntakeZeroState extends Command
 {
-    private ArmSubsystem subsystem;
+    private DoubleSupplier intakeSpeed;
+    private FloorIntakeSubsystem subsystem;
 
-    public PivotAnalogManual(ArmSubsystem skibidi)
+    public FloorIntakeZeroState(FloorIntakeSubsystem skibidi)
     {
         
         subsystem = skibidi;
@@ -27,13 +28,13 @@ public class PivotAnalogManual extends Command
 
     @Override
     public void execute(){
-        subsystem.setPivotMotor(-Constants.ArmConstants.PIVOT_SPEED);
+        subsystem.FloorPID(1, 0.5, 0.2, 1);
     }
 
     @Override
     public void end(boolean interrupted)
     {
-        subsystem.stopPivotMotor();
+        subsystem.stopFloorPivot();
     }
     
 }
