@@ -29,13 +29,13 @@ public class PivotManualState extends Command
 
     @Override
     public void execute(){
-        subsystem.setMotor(pivotSpeed.getAsDouble()*Constants.ArmConstants.PIVOT_SPEED);
+        subsystem.setPivotMotor(pivotSpeed.getAsDouble()*Constants.ArmConstants.PIVOT_SPEED);
     }
 
     @Override
     public void end(boolean interrupted)
     {
-        subsystem.stopMotor();
+        subsystem.stopPivotMotor();
     }
     
 }

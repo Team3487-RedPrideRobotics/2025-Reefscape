@@ -1,0 +1,104 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "L410"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Elevator L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Limelight Left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Forward 1.5"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Limelight Left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Forward 0.5"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Limelight Forward"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pivot L4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Elevator L4"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Elevator L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Arm Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Pivot Zero"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Claw Intake"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

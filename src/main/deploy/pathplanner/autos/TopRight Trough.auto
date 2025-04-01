@@ -7,25 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "P6_T11"
+            "pathName": "TopRight"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Floor Pivot Trough"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Floor Intake Shoot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "T11_RC"
           }
         }
       ]

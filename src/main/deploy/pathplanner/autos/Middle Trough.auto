@@ -7,7 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "P2_T9"
+            "pathName": "P4_T10"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Floor Pivot Trough"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
           }
         },
         {
@@ -17,15 +35,9 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "T9_LC"
+            "name": "Floor Pivot Home"
           }
         }
       ]

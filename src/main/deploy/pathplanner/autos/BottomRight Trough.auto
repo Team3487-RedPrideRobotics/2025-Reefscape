@@ -7,7 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "P4_T10"
+            "pathName": "BottomRight"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Floor Pivot Trough"
           }
         },
         {

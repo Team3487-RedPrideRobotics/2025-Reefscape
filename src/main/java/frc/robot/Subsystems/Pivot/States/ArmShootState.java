@@ -8,11 +8,11 @@ import frc.robot.Constants;
 import frc.robot.Subsystems.FloorIntake.FloorIntakeSubsystem;
 import frc.robot.Subsystems.Pivot.ArmSubsystem;
 
-public class PivotAnalogManual extends Command
+public class ArmShootState extends Command
 {
     private ArmSubsystem subsystem;
 
-    public PivotAnalogManual(ArmSubsystem skibidi)
+    public ArmShootState(ArmSubsystem skibidi)
     {
         
         subsystem = skibidi;
@@ -27,13 +27,13 @@ public class PivotAnalogManual extends Command
 
     @Override
     public void execute(){
-        subsystem.setPivotMotor(-Constants.ArmConstants.PIVOT_SPEED);
+        subsystem.setShootMotor(-1);
     }
 
     @Override
     public void end(boolean interrupted)
     {
-        subsystem.stopPivotMotor();
+        subsystem.stopShootMotor();
     }
     
 }

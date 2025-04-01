@@ -17,7 +17,7 @@ public class IntakeState extends Command
     }
 
     public void initialize(){
-        subsystem.runFloorIntake(1);
+        subsystem.runFloorIntake(0.5);
     }
 
     public void end(boolean interrupted)

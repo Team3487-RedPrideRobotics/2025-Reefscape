@@ -42,6 +42,26 @@ public class FloorIntakeSubsystem extends SubsystemBase{
     public double getPivotValue(){
         return pivotEncoder.getPosition();
     }
+    
+    
+    public boolean FloorPID(double goalValue,double limit, double kP, double threshold)
+    {
+        double delta = Math.abs(goalValue) - Math.abs(getPivotValue());
 
+        System.out.println(getPivotValue());
+        if(Math.abs(delta) >= threshold){
+            var speed = -delta*kP;
+            speed = Math.abs(speed) > limit ? limit * Math.signum(speed) : speed;
+            runFloorPivot(speed);
+            System.out.println("turn up that skibidi RIZZ");
+            return false;
+    }   else {
+            System.out.println("Erm what the sigma");
+            stopFloorPivot();
+            return true;
+    }
+
+  }
+    
 
 }
