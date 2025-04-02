@@ -5,46 +5,37 @@
 package frc.robot;
 
 import java.io.File;
-import java.nio.file.OpenOption;
 import java.util.function.DoubleSupplier;
 
-import com.google.gson.internal.ObjectConstructor;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.events.EventTrigger;
-import com.pathplanner.lib.events.OneShotTriggerEvent;
-
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.units.mutable.GenericMutableMeasureImpl;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.event.BooleanEvent;
-import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Subsystems.Camera;
-import frc.robot.Subsystems.SwerveSubsystem;
 import frc.robot.Subsystems.Elevator.ElevatorSubsystem;
+import frc.robot.Subsystems.Elevator.States.ElevatorBaseState;
+import frc.robot.Subsystems.Elevator.States.ElevatorIntakeState;
+import frc.robot.Subsystems.Elevator.States.ElevatorL4State;
 import frc.robot.Subsystems.Elevator.States.ElevatorManualState;
+import frc.robot.Subsystems.Elevator.States.ElevatorPermL2State;
+import frc.robot.Subsystems.Elevator.States.ElevatorPermL3State;
+import frc.robot.Subsystems.Elevator.States.ElevatorPermL4State;
 import frc.robot.Subsystems.Pivot.ArmSubsystem;
+import frc.robot.Subsystems.Pivot.States.ArmShootState;
+import frc.robot.Subsystems.Pivot.States.ArmSuckState;
 import frc.robot.Subsystems.Pivot.States.PivotAnalogManual;
+import frc.robot.Subsystems.Pivot.States.PivotIntakeState;
+import frc.robot.Subsystems.Pivot.States.PivotL4ScoredState;
 import frc.robot.Subsystems.Pivot.States.PivotManualState;
-<<<<<<< Updated upstream
-=======
 import frc.robot.Subsystems.Pivot.States.PivotZeroState;
 import frc.robot.Subsystems.Swerve.SwerveSubsystem;
 import frc.robot.Subsystems.Swerve.States.ForwardState;
@@ -53,12 +44,12 @@ import frc.robot.Subsystems.Swerve.States.LimelightForwardState;
 import frc.robot.Subsystems.Swerve.States.LimelightLeftState;
 import frc.robot.Subsystems.Swerve.States.LimelightRightState;
 import frc.robot.Subsystems.Swerve.States.RightState;
->>>>>>> Stashed changes
 import frc.robot.Subsystems.FloorIntake.FloorIntakeSubsystem;
+import frc.robot.Subsystems.FloorIntake.States.FloorIntakeZeroState;
 import frc.robot.Subsystems.FloorIntake.States.IntakePivotState;
 import frc.robot.Subsystems.FloorIntake.States.IntakeState;
 import frc.robot.Subsystems.FloorIntake.States.OuttakeState;
-import frc.robot.Subsystems.FloorIntake.States.SlowOuttakeState;
+import frc.robot.Subsystems.FloorIntake.States.TroughState;
 
 public class RobotContainer {
   public static SendableChooser<Command> autoChooser;
@@ -73,11 +64,14 @@ public class RobotContainer {
   final CommandXboxController operatorXbox;
 
   public RobotContainer() {
+    // Makes the driverstation not yell at me when I dont plug in a controller
     DriverStation.silenceJoystickConnectionWarning(true);
 
-    driverXbox = new CommandXboxController(1);
+    //Creates the two controllers with their port numbers
     operatorXbox = new CommandXboxController(0);
-   
+    driverXbox = new CommandXboxController(1);
+
+    //Creates all the subsystems
     drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
     pivot = new ArmSubsystem();
     floorIntake = new FloorIntakeSubsystem();
@@ -85,22 +79,16 @@ public class RobotContainer {
     //I dont think camera is needed with pi stuff, but scared to remove
     camera = new Camera();
    
+
+    //All 4 could be in constructer, this just makes it look nicer
     configureDriverBindings();
     configureOperatorBindings();
-    
     buildNamedCommands();
     BuildAutoChooser();
   }
 
 
   private void configureDriverBindings() {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    
-    Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
-=======
-=======
->>>>>>> Stashed changes
     //
     // Creating Double Supplier for elevator sensor, allowing slowing down while elevator high
     //
@@ -110,14 +98,11 @@ public class RobotContainer {
     // Driving field oriented
     //
     Command FieldOriented = drivebase.driveCommand(
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
       () -> MathUtil.applyDeadband(driverXbox.getLeftY(), DriverConstants.LEFT_Y_DEADBAND),
       () -> MathUtil.applyDeadband(driverXbox.getLeftX(), DriverConstants.LEFT_X_DEADBAND),
       () -> MathUtil.applyDeadband(driverXbox.getRightX(), DriverConstants.RIGHT_X_DEADBAND),
-     true);
+      true,
+      elevatorValue);
 
     //
     // Driving front of robot centric
@@ -126,7 +111,8 @@ public class RobotContainer {
       () -> MathUtil.applyDeadband(driverXbox.getLeftY(), DriverConstants.LEFT_Y_DEADBAND),
       () -> MathUtil.applyDeadband(driverXbox.getLeftX(), DriverConstants.LEFT_X_DEADBAND),
       () -> MathUtil.applyDeadband(driverXbox.getRightX(), DriverConstants.RIGHT_X_DEADBAND),
-          false);
+      false,
+      elevatorValue);
 
     //
     // Driving back of robot centric
@@ -135,14 +121,12 @@ public class RobotContainer {
       () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), DriverConstants.LEFT_Y_DEADBAND),
       () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), DriverConstants.LEFT_X_DEADBAND),
       () -> MathUtil.applyDeadband(driverXbox.getRightX(), DriverConstants.RIGHT_X_DEADBAND),
-          false);
+      false,
+      elevatorValue);
 
-<<<<<<< Updated upstream
-=======
             
     
 
->>>>>>> Stashed changes
     drivebase.setDefaultCommand(FieldOriented);
     drivebase.getSubsystem();
     
@@ -155,13 +139,6 @@ public class RobotContainer {
     driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
     driverXbox.y().toggleOnTrue(new FloorIntakeZeroState(floorIntake));
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    driverXbox.leftBumper().whileTrue(AHHHH_WHY_HAVE_YOU_FORSAKEN_ME);
-    driverXbox.rightBumper().whileTrue(floorMan);
-=======
-=======
->>>>>>> Stashed changes
     
     //
     // Left Bumper: Activate front centric
@@ -190,7 +167,6 @@ public class RobotContainer {
     driverXbox.rightTrigger().whileTrue(new RightState(drivebase));
 
 
->>>>>>> Stashed changes
   }
 
   public void configureOperatorBindings()
@@ -228,13 +204,6 @@ public class RobotContainer {
         () -> MathUtil.applyDeadband(operatorXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND))
     );
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    operatorXbox.rightBumper().whileTrue(new IntakeState(floorIntake, 1));
-    operatorXbox.rightTrigger(0.2).whileTrue(new OuttakeState(floorIntake, 1));
-=======
-=======
->>>>>>> Stashed changes
     //
     // Right Bumper intakes both pivot and floor intake
     //
@@ -275,23 +244,12 @@ public class RobotContainer {
       new ParallelCommandGroup(
           new PivotIntakeState(pivot), 
           new ElevatorIntakeState(elevator)));
->>>>>>> Stashed changes
 
 
   }
  
-  public Command getAutonomousCommand() {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    //return autoChooser.getSelected();
-    return new PathPlannerAuto("A-P4_T10;");
-  }
 
-  public void buildNamedCommands(){
-    NamedCommands.registerCommand("Floor Intake Shoot", new SlowOuttakeState(floorIntake));
-=======
-=======
->>>>>>> Stashed changes
+  public Command getAutonomousCommand() {
     // returns what the AutoChooser selected
     return autoChooser.getSelected();
   }
@@ -325,10 +283,6 @@ public class RobotContainer {
     NamedCommands.registerCommand("Limelight Forward", new LimelightForwardState(drivebase));
     NamedCommands.registerCommand("Forward 0.5", new ForwardState(drivebase).withTimeout(0.5));
     NamedCommands.registerCommand("Forward 1.5", new ForwardState(drivebase).withTimeout(1.5));
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
   }
 
   public void setMotorBrake(boolean brake)
