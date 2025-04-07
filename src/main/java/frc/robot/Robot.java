@@ -4,6 +4,20 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+
+import com.ctre.phoenix6.SignalLogger;
+import com.pathplanner.lib.commands.PathfindingCommand;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Utils.PeriodicalUtil;
+
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -11,7 +25,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
@@ -23,7 +37,39 @@ public class Robot extends TimedRobot {
   }
 
   @Override
+  public void robotInit(){
+
+    Logger.recordMetadata("RobotName", "2025Bot"); // Set a metadata value
+
+    try {
+      if(isReal()) {
+        Logger.addDataReceiver(new WPILOGWriter("/U/Logs")); // Log to a USB stick ("/U/logs")
+        SignalLogger.setPath("/U/Logs");
+        SignalLogger.stop();
+      }
+    } catch (Exception e) {
+      DriverStation.reportWarning(e.getMessage(), e.getStackTrace());
+
+      Logger.addDataReceiver(new WPILOGWriter("/logs"));
+    }
+    
+    Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+      
+    // Logger.disableDeterministicTimestamps() // See "Deterministic Timestamps" in
+    // the "Understanding Data Flow" page
+    Logger.start(); // Start logging! No more data receivers, r eplay sources, or metadata values may
+                    // be added.
+
+
+    PathfindingCommand.warmupCommand().schedule();
+    
+
+    RobotController.setBrownoutVoltage(6.25);  }
+
+  @Override
   public void robotPeriodic() {
+    PeriodicalUtil.runPeriodics();
+
     CommandScheduler.getInstance().run();
   }
 

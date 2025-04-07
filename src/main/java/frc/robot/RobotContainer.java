@@ -10,6 +10,9 @@ import java.util.function.DoubleSupplier;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -39,6 +42,7 @@ import frc.robot.Subsystems.Pivot.States.PivotL4ScoredState;
 import frc.robot.Subsystems.Pivot.States.PivotManualState;
 import frc.robot.Subsystems.Pivot.States.PivotZeroState;
 import frc.robot.Subsystems.Swerve.SwerveSubsystem;
+import frc.robot.Subsystems.Swerve.States.DriveToPose;
 import frc.robot.Subsystems.Swerve.States.ForwardState;
 import frc.robot.Subsystems.Swerve.States.LeftState;
 import frc.robot.Subsystems.Swerve.States.LimelightForwardState;
@@ -152,14 +156,12 @@ public class RobotContainer {
     driverXbox.rightBumper().whileTrue(BackCentric);
 
     //
-    // Up Arrow: Limelight Allign "Forward"
-    // Left Arrow: Limelight Allign Left
-    // Right Arrow: Limelight Allign Right
+    // Up Arrow: 
+    // Left Arrow: 
+    // Right Arrow: 
     //
-    driverXbox.povUp().whileTrue(new LimelightForwardState(drivebase));
-    driverXbox.povLeft().whileTrue(new LimelightLeftState(drivebase));
-    driverXbox.povRight().whileTrue(new LimelightRightState(drivebase));
-
+    driverXbox.povLeft().whileTrue(new DriveToPose(drivebase, new Pose2d(new Translation2d(5,5), new Rotation2d(0))));
+    
     //
     // Left Trigger: Left
     // Right Trigger: Right

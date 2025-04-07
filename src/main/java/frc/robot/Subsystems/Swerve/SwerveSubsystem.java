@@ -1,7 +1,10 @@
 package frc.robot.Subsystems.Swerve;
 
+import edu.wpi.first.hal.simulation.RoboRioDataJNI;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.GenericEntry;
@@ -14,8 +17,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
+import frc.robot.Subsystems.Limelight.Limelight;
+import frc.robot.Subsystems.Limelight.LimelightHelpers;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveDriveConfiguration;
@@ -47,6 +51,7 @@ public class SwerveSubsystem extends SubsystemBase {
   //5010 mentor said to add this line here SwerveDriveTelemetry.Verbosity = TelemetryVerbosity.HIGH;
   
   public SwerveSubsystem(File directory) {
+
     try {
       SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH; 
       swerveDrive = new SwerveParser(directory).createSwerveDrive(Constants.MAX_SPEED);
@@ -65,6 +70,17 @@ public class SwerveSubsystem extends SubsystemBase {
       swerveDrive.setCosineCompensator(false);
       swerveDrive.setAngularVelocityCompensation(true, true, 0.1);
       swerveDrive.setModuleEncoderAutoSynchronize(false, 1);
+
+      Limelight limelight = new Limelight("limelight-bambino");
+      limelight.configure(new Pose3d(
+      1,
+      1,
+      1,
+      new Rotation3d(
+        0,
+        Rotation2d.fromDegrees(45).getRadians(),
+        0
+      )));
   }
       
 

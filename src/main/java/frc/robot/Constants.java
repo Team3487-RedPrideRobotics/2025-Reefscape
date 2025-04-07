@@ -4,6 +4,7 @@ package frc.robot;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
@@ -47,7 +48,11 @@ public final class Constants {
 
         public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.5, 0, 0);
         public static final PIDConstants ANGLE_PID       = new PIDConstants(0, 0, 0.01);
-        public static final double AUTO_MAX_SPEED = 0.5; //  meters per second
+        public static final double AUTO_MAX_SPEED = 2; //  meters per second
+        public static final double AUTO_MAX_ACCELERATION = 0.5;
+        public static final Rotation2d AUTO_MAX_ROTATION_SPEED = Rotation2d.fromDegrees(560.0); // this is maybe speed i honestly have no idea
+        public static final Rotation2d AUTO_MAX_ROTATION_ACCELERATION = Rotation2d.fromDegrees(720.0); /// this is maybe acceleration i honestly have no idea
+        //if you are reading this... stay skibidi
     }
 
     
