@@ -39,7 +39,7 @@ public class LimelightLeftState extends Command{
         
         if(aprilTag == currentLime)
         {
-            if(subsystem.swerveDrivePID(24.5, tx, 0.2, 0.08, 0.2, false)){
+            if(subsystem.swerveDrivePID(23.5, tx, 0.2, 0.08, 0.3, false)){
                 done = true;
             }
         }

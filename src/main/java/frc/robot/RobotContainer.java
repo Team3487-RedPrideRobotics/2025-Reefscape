@@ -22,6 +22,7 @@ import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Subsystems.Camera;
 import frc.robot.Subsystems.Elevator.ElevatorSubsystem;
+import frc.robot.Subsystems.Elevator.States.ElevatorAlgaeTurnState;
 import frc.robot.Subsystems.Elevator.States.ElevatorBaseState;
 import frc.robot.Subsystems.Elevator.States.ElevatorIntakeState;
 import frc.robot.Subsystems.Elevator.States.ElevatorL4State;
@@ -245,6 +246,10 @@ public class RobotContainer {
           new PivotIntakeState(pivot), 
           new ElevatorIntakeState(elevator)));
 
+    // 
+    //
+    //
+    operatorXbox.povRight().whileTrue(new ElevatorAlgaeTurnState(elevator).andThen(new PivotZeroState(pivot)));
 
   }
  
