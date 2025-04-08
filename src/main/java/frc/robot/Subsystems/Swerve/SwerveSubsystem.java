@@ -20,6 +20,7 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Subsystems.Limelight.Limelight;
 import frc.robot.Subsystems.Limelight.LimelightHelpers;
+import frc.robot.Utils.Loggable;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveDriveConfiguration;
@@ -32,6 +33,9 @@ import java.net.Socket;
 import java.util.Locale.Category;
 import java.util.function.DoubleSupplier;
 
+import org.littletonrobotics.junction.AutoLog;
+import org.littletonrobotics.junction.AutoLogOutput;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.PIDConstants;
@@ -42,7 +46,6 @@ import com.revrobotics.AbsoluteEncoder;
 
 
 public class SwerveSubsystem extends SubsystemBase {
-
   private final SwerveDrive swerveDrive;
   File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
   public RobotConfig config;
@@ -149,6 +152,7 @@ public class SwerveSubsystem extends SubsystemBase {
     return getPose().getRotation();
   }
 
+
   /**
    * Command to drive the robot based on joystick inputs for translation and rotation.
    *
@@ -177,10 +181,6 @@ public class SwerveSubsystem extends SubsystemBase {
       //double rot = rotation.getAsDouble() * Math.PI;
       //driveFieldOriented(new ChassisSpeeds(translation.getX(), translation.getY(), rot));
     //});
-  }
-  @Override
-  public void periodic() {
-    // Periodic code can be added here
   }
 
   public void setMotorBrake(boolean brake)

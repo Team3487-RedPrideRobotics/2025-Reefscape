@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Subsystems.Camera;
 import frc.robot.Subsystems.Elevator.ElevatorSubsystem;
 import frc.robot.Subsystems.Elevator.States.ElevatorAlgaeTurnState;
 import frc.robot.Subsystems.Elevator.States.ElevatorBaseState;
@@ -63,7 +62,6 @@ public class RobotContainer {
   private final ArmSubsystem pivot;
   private final FloorIntakeSubsystem floorIntake;
   private final ElevatorSubsystem elevator;
-  private final Camera camera;
 
   private final CommandXboxController driverXbox;
   final CommandXboxController operatorXbox;
@@ -81,8 +79,6 @@ public class RobotContainer {
     pivot = new ArmSubsystem();
     floorIntake = new FloorIntakeSubsystem();
     elevator = new ElevatorSubsystem();
-    //I dont think camera is needed with pi stuff, but scared to remove
-    camera = new Camera();
    
 
     //All 4 could be in constructer, this just makes it look nicer
@@ -243,7 +239,7 @@ public class RobotContainer {
     //
     // Down arrow moves elevator to intake position, moves pivot to intake angle, and intakes pivot
     //
-    operatorXbox.povDown().whileTrue(
+    operatorXbox.povDown().whileTrue( 
       new ParallelCommandGroup(
           new PivotIntakeState(pivot), 
           new ElevatorIntakeState(elevator)));
