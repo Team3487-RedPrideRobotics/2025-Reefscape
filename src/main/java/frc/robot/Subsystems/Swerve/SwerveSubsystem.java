@@ -47,6 +47,7 @@ public class SwerveSubsystem extends SubsystemBase {
   File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
   public RobotConfig config;
   double LooksMaxLevel;
+  public Limelight limelight;
   
   //5010 mentor said to add this line here SwerveDriveTelemetry.Verbosity = TelemetryVerbosity.HIGH;
   
@@ -71,11 +72,11 @@ public class SwerveSubsystem extends SubsystemBase {
       swerveDrive.setAngularVelocityCompensation(true, true, 0.1);
       swerveDrive.setModuleEncoderAutoSynchronize(false, 1);
 
-      Limelight limelight = new Limelight("limelight-bambino");
+      limelight = new Limelight("limelight-bambino");
       limelight.configure(new Pose3d(
-      1,
-      1,
-      1,
+      -0.12027, 
+      0, //meters
+      1.01889,
       new Rotation3d(
         0,
         Rotation2d.fromDegrees(45).getRadians(),
@@ -124,7 +125,12 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return The robot's Pose2d.
    */
   public Pose2d getPose() {
-    return swerveDrive.getPose();
+    if(limelight.getBotPose() != new Pose2d(0, 0, new Rotation2d(0))){
+      return limelight.getBotPose();
+    } else {
+      return swerveDrive.getPose();
+    }
+    
   }
 
   /**
@@ -263,5 +269,8 @@ public class SwerveSubsystem extends SubsystemBase {
       return true;
     }
 
+    
+
   }
+  
 }
