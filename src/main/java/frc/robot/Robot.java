@@ -37,27 +37,6 @@ public class Robot extends LoggedRobot {
     @Override
     public void robotInit(){
   
-      Logger.recordMetadata("SwimShady", "2025Bot"); // Set a metadata value
-  
-      try {
-        if(isReal()) {
-          Logger.addDataReceiver(new WPILOGWriter("/U/logs")); // Log to a USB stick ("/U/logs")
-          SignalLogger.setPath("/U/logs");
-          SignalLogger.stop();
-        }
-      } catch (Exception e) {
-        DriverStation.reportWarning(e.getMessage(), e.getStackTrace());
-  
-        Logger.addDataReceiver(new WPILOGWriter("/logs"));
-      }
-      
-      Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-        
-      // Logger.disableDeterministicTimestamps() // See "Deterministic Timestamps" in
-      // the "Understanding Data Flow" page
-      Logger.start(); // Start logging! No more data receivers, r eplay sources, or metadata values may
-                      // be added.
-  
   
     m_robotContainer = new RobotContainer();
     disabledTimer = new Timer();
@@ -65,7 +44,8 @@ public class Robot extends LoggedRobot {
     PathfindingCommand.warmupCommand().schedule();
     
 
-    RobotController.setBrownoutVoltage(6.25);  }
+    RobotController.setBrownoutVoltage(6.25);  
+  }
 
   @Override
   public void robotPeriodic() {

@@ -6,20 +6,21 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.RobotContainer;
+import frc.robot.Subsystems.Limelight.LimelightHelpers.PoseEstimate;
+import frc.robot.Subsystems.Swerve.SwerveSubsystem;
 import frc.robot.Utils.Loggable;
 import frc.robot.Utils.Periodical;
 import frc.robot.Utils.PeriodicalUtil;
 
-public class Limelight implements Periodical, Loggable{
-    @AutoLog
-    public static class LimelightInputs {
-        boolean tV;
+public class Limelight implements Periodical{
+    boolean tV;
         Pose2d robotPose;
         double tagDist;
+        SwerveSubsystem swerve;
+    public static class LimelightInputs {
+        
     }
-
-    
-    LimelightInputsAutoLogged inputs = new LimelightInputsAutoLogged();
 
     private String tableName;
     
@@ -28,9 +29,9 @@ public class Limelight implements Periodical, Loggable{
 
         configure(new Pose3d());
 
-        inputs.tV = false;
-        inputs.robotPose = new Pose2d();
-        inputs.tagDist = 0.0;
+        tV = false;
+        robotPose = new Pose2d();
+        tagDist = 0.0;
 
         PeriodicalUtil.registerPeriodic(this);
     }
@@ -77,21 +78,17 @@ public class Limelight implements Periodical, Loggable{
 
     @Override
     public void periodic() {
-        LimelightHelpers.PoseEstimate poseEstimate = getBotPoseEstimate();
+        PoseEstimate poseEstimate = getBotPoseEstimate();
         if(poseEstimate == null) {
-            inputs.robotPose = new Pose2d(0, 0, new Rotation2d(0));
-            inputs.tagDist = 0.0;
+            robotPose = new Pose2d(0, 0, new Rotation2d(0));
+            tagDist = 0.0;
         } else {
-            inputs.robotPose = poseEstimate.pose;
-            inputs.tagDist = poseEstimate.avgTagDist;
+            robotPose = poseEstimate.pose;
+            tagDist =poseEstimate.avgTagDist;
         }
-        inputs.tV = LimelightHelpers.getTV(tableName);
+        tV = LimelightHelpers.getTV(tableName);
 
-        log("Limelights", tableName);
+        //System.out.println(robotPose);
     }
 
-    @Override
-    public void log(String subdirectory, String humanReadableName) {
-        Logger.processInputs(subdirectory + "/" + humanReadableName, inputs);
-    }
 }

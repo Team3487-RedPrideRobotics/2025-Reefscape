@@ -77,12 +77,12 @@ public class SwerveSubsystem extends SubsystemBase {
 
       limelight = new Limelight("limelight-bambino");
       limelight.configure(new Pose3d(
-      -0.12027, 
+      -0.066675, //-0.12027 
       0, //meters
-      1.01889,
+      0.635,
       new Rotation3d(
         0,
-        Rotation2d.fromDegrees(45).getRadians(),
+        Rotation2d.fromDegrees(-45).getRadians(),
         0
       )));
   }
@@ -128,12 +128,8 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return The robot's Pose2d.
    */
   public Pose2d getPose() {
-    if(limelight.getBotPose() != new Pose2d(0, 0, new Rotation2d(0))){
       return limelight.getBotPose();
-    } else {
-      return swerveDrive.getPose();
-    }
-    
+
   }
 
   /**
@@ -173,14 +169,6 @@ public class SwerveSubsystem extends SubsystemBase {
       );
     });
 
-    //return run(() -> {
-      //Translation2d translation = new Translation2d(
-        //translationX.getAsDouble() * swerveDrive.getMaximumChassisVelocity(),
-        //translationY.getAsDouble() * swerveDrive.getMaximumChassisVelocity()
-      //);
-      //double rot = rotation.getAsDouble() * Math.PI;
-      //driveFieldOriented(new ChassisSpeeds(translation.getX(), translation.getY(), rot));
-    //});
   }
 
   public void setMotorBrake(boolean brake)
@@ -268,9 +256,12 @@ public class SwerveSubsystem extends SubsystemBase {
       drive(new Translation2d(0,0), 0 ,false);
       return true;
     }
+  }
 
-    
-
+  @Override
+  public void periodic(){
+    //System.out.println("Im here, sigma");
+    limelight.setRobotOrientation(getHeading().getDegrees());
   }
   
 }

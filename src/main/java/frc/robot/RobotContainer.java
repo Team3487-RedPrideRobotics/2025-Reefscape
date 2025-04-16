@@ -58,7 +58,7 @@ import frc.robot.Subsystems.FloorIntake.States.TroughState;
 public class RobotContainer {
   public static SendableChooser<Command> autoChooser;
   
-  private final SwerveSubsystem drivebase;
+  public  final SwerveSubsystem drivebase;
   private final ArmSubsystem pivot;
   private final FloorIntakeSubsystem floorIntake;
   private final ElevatorSubsystem elevator;
@@ -156,7 +156,7 @@ public class RobotContainer {
     // Left Arrow: 
     // Right Arrow: 
     //
-    driverXbox.povLeft().whileTrue(new DriveToPose(drivebase, new Pose2d(new Translation2d(5,5), new Rotation2d(0))));
+    driverXbox.povLeft().whileTrue(new DriveToPose(drivebase, new Pose2d(new Translation2d(0.59, 0.49), new Rotation2d(0))));
     
     //
     // Left Trigger: Left
