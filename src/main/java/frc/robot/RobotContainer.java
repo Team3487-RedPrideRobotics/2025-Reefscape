@@ -22,6 +22,8 @@ import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Subsystems.Camera;
 import frc.robot.Subsystems.Elevator.ElevatorSubsystem;
+import frc.robot.Subsystems.Elevator.States.ElevatorAlgaeHighState;
+import frc.robot.Subsystems.Elevator.States.ElevatorAlgaeLowState;
 import frc.robot.Subsystems.Elevator.States.ElevatorAlgaeTurnState;
 import frc.robot.Subsystems.Elevator.States.ElevatorBaseState;
 import frc.robot.Subsystems.Elevator.States.ElevatorIntakeState;
@@ -33,6 +35,7 @@ import frc.robot.Subsystems.Elevator.States.ElevatorPermL4State;
 import frc.robot.Subsystems.Pivot.ArmSubsystem;
 import frc.robot.Subsystems.Pivot.States.ArmShootState;
 import frc.robot.Subsystems.Pivot.States.ArmSuckState;
+import frc.robot.Subsystems.Pivot.States.PivotAlgaeState;
 import frc.robot.Subsystems.Pivot.States.PivotAnalogManual;
 import frc.robot.Subsystems.Pivot.States.PivotIntakeState;
 import frc.robot.Subsystems.Pivot.States.PivotL4ScoredState;
@@ -125,6 +128,16 @@ public class RobotContainer {
       false,
       elevatorValue);
 
+      
+    //
+    // Driving back of robot centric
+    //
+    Command Slow = drivebase.driveCommand(
+      () -> MathUtil.applyDeadband(driverXbox.getLeftY() * 1/3, DriverConstants.LEFT_Y_DEADBAND),
+      () -> MathUtil.applyDeadband(driverXbox.getLeftX() * 1/3, DriverConstants.LEFT_X_DEADBAND),
+      () -> MathUtil.applyDeadband(driverXbox.getRightX() * 1/3, DriverConstants.RIGHT_X_DEADBAND),
+      true, 
+      elevatorValue);
             
     
 
@@ -138,7 +151,7 @@ public class RobotContainer {
     // 
     driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
     driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-    driverXbox.y().toggleOnTrue(new FloorIntakeZeroState(floorIntake));
+    driverXbox.b().toggleOnTrue(new FloorIntakeZeroState(floorIntake));
 
     
     //
@@ -147,9 +160,14 @@ public class RobotContainer {
     driverXbox.leftBumper().whileTrue(FrontCentric);
 
     //
-    // Right Bumbper: Activate back centric  
+    // Right Bumper: Activate back centric  
     //
     driverXbox.rightBumper().whileTrue(BackCentric);
+
+    //
+    // :Activate Slow Mode
+    //
+    driverXbox.y().whileTrue(Slow);
 
     //
     // Up Arrow: Limelight Allign "Forward"
@@ -249,7 +267,16 @@ public class RobotContainer {
     // 
     //
     //
-    operatorXbox.povRight().whileTrue(new ElevatorAlgaeTurnState(elevator).andThen(new PivotZeroState(pivot)));
+
+    operatorXbox.povLeft().whileTrue(
+      new ParallelCommandGroup(
+          new ElevatorAlgaeLowState(elevator),
+          new PivotAlgaeState(pivot)));
+
+    operatorXbox.povRight().whileTrue(
+        new ParallelCommandGroup(
+                new ElevatorAlgaeHighState(elevator),
+                new PivotAlgaeState(pivot)));
 
   }
  
@@ -266,7 +293,7 @@ public class RobotContainer {
     //
     NamedCommands.registerCommand("Floor Pivot Trough", new TroughState(floorIntake));
     NamedCommands.registerCommand("Floor Pivot Home", new FloorIntakeZeroState(floorIntake));
-    NamedCommands.registerCommand("Floor Intake Shoot", new OuttakeState(floorIntake, 1).withTimeout(2));
+    NamedCommands.registerCommand("Floor Intake Shoot", new OuttakeState(floorIntake, 1).withTimeout(1.25));
 
     //
     // Elevator
