@@ -167,7 +167,7 @@ public class RobotContainer {
     //
     // :Activate Slow Mode
     //
-    driverXbox.y().whileTrue(Slow);
+    driverXbox.y().whileFalse(Slow);
 
     //
     // Up Arrow: Limelight Allign "Forward"

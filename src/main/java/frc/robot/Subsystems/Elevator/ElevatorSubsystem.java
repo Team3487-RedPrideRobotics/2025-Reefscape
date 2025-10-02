@@ -5,6 +5,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -14,19 +15,27 @@ public class ElevatorSubsystem extends SubsystemBase {
     private SparkMax elevatorMotorLeft;
     private SparkMax elevatorMotorRight;
 
+    private DigitalInput m_beamBreak;
     private RelativeEncoder elevatorEncoder;
     
     public ElevatorSubsystem(){
         elevatorMotorLeft = new SparkMax(Constants.ElevatorConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
         elevatorMotorRight = new SparkMax(Constants.ElevatorConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
+        DigitalInput m_beamBreak = new DigitalInput(0);
 
         elevatorEncoder = elevatorMotorLeft.getEncoder();
     }
     
     public void runMotors(double power) {
+        if(!m_beamBreak.get()){
         elevatorMotorLeft.set(-power);
-        
         elevatorMotorRight.set(power);
+        }
+        else{
+            if(m_beamBreak.get()&&power<0){        
+            elevatorMotorLeft.set(-power);
+            elevatorMotorRight.set(power);}
+        }
     }
 
     public void stopMotors()
