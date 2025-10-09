@@ -4,6 +4,7 @@ import java.lang.module.ModuleDescriptor.Requires;
 import java.util.function.DoubleSupplier;
 import java.util.prefs.BackingStoreException;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -15,12 +16,16 @@ public class ElevatorManualState extends Command
 {
     private ElevatorSubsystem subsystem;
     private DoubleSupplier elevatorSpeed;
+    private DigitalInput beamBreak;
+
 
     public ElevatorManualState(ElevatorSubsystem skibidi, DoubleSupplier balkanRage)
     {
         
         subsystem = skibidi;
         elevatorSpeed = balkanRage;
+
+        beamBreak = new DigitalInput(0);
 
         addRequirements(skibidi);
     }
@@ -32,7 +37,12 @@ public class ElevatorManualState extends Command
 
     @Override
     public void execute(){
-        subsystem.runMotors(elevatorSpeed.getAsDouble());
+    
+    if(!beamBreak.get() || (beamBreak.get() && elevatorSpeed.getAsDouble()<0)){
+    subsystem.runMotors(elevatorSpeed.getAsDouble());
+    }
+
+    
     }
 
     @Override

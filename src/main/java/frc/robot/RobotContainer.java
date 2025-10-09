@@ -10,6 +10,7 @@ import java.util.function.DoubleSupplier;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -63,6 +64,7 @@ public class RobotContainer {
   private final FloorIntakeSubsystem floorIntake;
   private final ElevatorSubsystem elevator;
   private final Camera camera;
+  
 
   private final CommandXboxController driverXbox;
   final CommandXboxController operatorXbox;
@@ -82,7 +84,6 @@ public class RobotContainer {
     elevator = new ElevatorSubsystem();
     //I dont think camera is needed with pi stuff, but scared to remove
     camera = new Camera();
-   
 
     //All 4 could be in constructer, this just makes it look nicer
     configureDriverBindings();

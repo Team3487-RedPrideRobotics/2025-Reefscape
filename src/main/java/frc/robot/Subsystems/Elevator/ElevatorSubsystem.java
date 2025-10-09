@@ -15,27 +15,19 @@ public class ElevatorSubsystem extends SubsystemBase {
     private SparkMax elevatorMotorLeft;
     private SparkMax elevatorMotorRight;
 
-    private DigitalInput m_beamBreak;
     private RelativeEncoder elevatorEncoder;
     
     public ElevatorSubsystem(){
         elevatorMotorLeft = new SparkMax(Constants.ElevatorConstants.LEFT_MOTOR_ID, MotorType.kBrushless);
         elevatorMotorRight = new SparkMax(Constants.ElevatorConstants.RIGHT_MOTOR_ID, MotorType.kBrushless);
-        DigitalInput m_beamBreak = new DigitalInput(0);
 
         elevatorEncoder = elevatorMotorLeft.getEncoder();
     }
     
     public void runMotors(double power) {
-        if(!m_beamBreak.get()){
+        
         elevatorMotorLeft.set(-power);
         elevatorMotorRight.set(power);
-        }
-        else{
-            if(m_beamBreak.get()&&power<0){        
-            elevatorMotorLeft.set(-power);
-            elevatorMotorRight.set(power);}
-        }
     }
 
     public void stopMotors()
